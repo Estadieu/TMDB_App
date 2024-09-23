@@ -13,8 +13,8 @@ interface Tmdbapi{
     suspend fun lastmoviesOfWeek(@Query("api_key") api_key: String): TmdbMovieResult
 
 
-    @GET("search/movie/")
-    suspend fun searchMovie(@Query("query") keyWord: String, @Query("api_key") api_key: String) : TmdbMovieResult
+    @GET("search/movie")
+    suspend fun getFilmParMotsCle(@Query("query") keyWord: String, @Query("api_key") api_key: String) : TmdbMovieResult
 
     //Séries
     @GET("trending/tv/week")

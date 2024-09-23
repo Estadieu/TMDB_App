@@ -26,9 +26,12 @@ class MovieViewModel: ViewModel() {
             movies.value = api.lastmoviesOfWeek("").results
         }
     }
+    /*
     fun searchMovie(texte: String) {
         viewModelScope.launch {
             movies.value = api.searchMovie(texte, "").results
         }
     }
+    */
+
 }
