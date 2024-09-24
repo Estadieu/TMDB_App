@@ -34,12 +34,10 @@ class MainViewModel : ViewModel(){
             movies.value = service.lastmoviesOfWeek(api_key).results
         }
     }
-    /*
+
     fun searchMovies(motcle: String){
         viewModelScope.launch {
             movies.value = service.getFilmParMotsCle(motcle,api_key).results
         }
     }
-    */
-
 }
