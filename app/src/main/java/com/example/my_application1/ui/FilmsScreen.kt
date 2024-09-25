@@ -1,6 +1,5 @@
 package com.example.my_application1.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -23,31 +22,50 @@ fun FilmsScreen(navController: NavController, viewModel: MainViewModel, windowCl
     // Récupérer l'état des films à partir du ViewModel
     val moviesState = viewModel.movies.collectAsState()
     val movies = moviesState.value
+    // Etat pour stocker le mot-clé
+    var searchQuery by remember { mutableStateOf("") }
 
-    //Déclencher la recherche
+    //Déclencher la recherche (Si pas de mot clé -> film + Pop, voir code searchMovies)
     LaunchedEffect(Unit) {
-        viewModel.searchMoviesPopular()
+        viewModel.searchMovies("")
     }
 
-    // Calculer le nombre de colonnes de mon app fonction de la taille de l'écran
-    val columns = when (windowClass.windowWidthSizeClass) {
-        WindowWidthSizeClass.COMPACT -> 2  // Deux colonnes -> pour petits écrans
-        WindowWidthSizeClass.MEDIUM -> 3   // Trois colonnes -> pour écrans moyens
-        WindowWidthSizeClass.EXPANDED -> 4 // Quatre colonnes -> pour grands écrans
-        else -> 2
-    }
-
-    // Affichage avec LazyVerticalGrid pour une meilleure gestion des colonnes
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(columns),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    Column(
+        modifier = Modifier.fillMaxSize()
     ) {
-        items(movies) { movie ->
-            MovieItem(movie = movie, windowClass = windowClass)
+        // Barre de recherche
+        TextField(
+            value = searchQuery,
+            onValueChange = { query ->
+                searchQuery = query
+                viewModel.searchMovies(query) // Appel de la fonction de recherche avec le mot-clé
+            },
+            label = { Text("Rechercher un film...") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        )
+
+        // Calculer le nombre de colonnes en fonction de la taille de l'écran
+        val columns = when (windowClass.windowWidthSizeClass) {
+            WindowWidthSizeClass.COMPACT -> 2  // Deux colonnes pour les petits écrans
+            WindowWidthSizeClass.MEDIUM -> 3   // Trois colonnes pour les écrans moyens
+            WindowWidthSizeClass.EXPANDED -> 4 // Quatre colonnes pour les grands écrans
+            else -> 2
+        }
+
+        // Affichage de la grille des films
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(columns),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(movies) { movie ->
+                MovieItem(movie = movie, windowClass = windowClass)
+            }
         }
     }
 }
@@ -64,17 +82,17 @@ fun MovieItem(movie: TmdbMovie, windowClass: WindowSizeClass) {
 
     val textHeightFraction = 0.1f // Le texte prend 10% de la hauteur
 
-    // Couleur de fond violette par défaut pour la carte
+    // Couleur
     val backgroundColor = Color(0xFF6200EE) // Violet par défaut
 
-    // Utilisation d'une Card pour encapsuler le contenu avec une couleur de fond violette
+    // Utilisation d'une Card pour encapsuler le contenu d'un film
     Card(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(10.dp),
-        elevation = CardDefaults.cardElevation(7.dp), // Utilisation de cardElevation pour l'élévation
-        colors = CardDefaults.cardColors(containerColor = backgroundColor) // Définir la couleur de fond violette ici
+        elevation = CardDefaults.cardElevation(7.dp),
+        colors = CardDefaults.cardColors(containerColor = backgroundColor)
     ) {
         Column(
             modifier = Modifier
@@ -95,7 +113,7 @@ fun MovieItem(movie: TmdbMovie, windowClass: WindowSizeClass) {
             Text(
                 text = movie.original_title,
                 fontSize = 14.sp,
-                color = Color.White,  // Le texte en blanc pour contraster avec le fond violet
+                color = Color.White,
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(textHeightFraction) // Hauteur proportionnelle pour le texte
@@ -105,10 +123,10 @@ fun MovieItem(movie: TmdbMovie, windowClass: WindowSizeClass) {
             Text(
                 text = movie.release_date,
                 fontSize = 12.sp,
-                color = Color.White.copy(alpha = 0.7f), // Le texte en blanc pour contraster avec le fond violet
+                color = Color.White.copy(alpha = 0.7f),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(textHeightFraction) // Hauteur proportionnelle pour la date
+                    .fillMaxHeight(textHeightFraction)
             )
         }
     }

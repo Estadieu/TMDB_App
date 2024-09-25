@@ -9,7 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-class MainViewModel : ViewModel(){
+class MainViewModel : ViewModel() {
     val movies = MutableStateFlow<List<TmdbMovie>>(listOf())
     val api_key = "a6f34ffd317094fe364b44e6dbd6d5bc"
 
@@ -29,15 +29,15 @@ class MainViewModel : ViewModel(){
         .create(Tmdbapi::class.java);
 
 
-    fun searchMoviesPopular(){
+    fun searchMovies(motcle: String) {
         viewModelScope.launch {
-            movies.value = service.lastmoviesOfWeek(api_key).results
-        }
-    }
-
-    fun searchMovies(motcle: String){
-        viewModelScope.launch {
-            movies.value = service.getFilmParMotsCle(motcle,api_key).results
+            if (motcle.isBlank()) {
+                // Si aucun mot-clé n'est fourni, on affiche les films populaires
+                movies.value = service.lastmoviesOfWeek(api_key).results
+            } else {
+                // Sinon, on filtre les films par le mot-clé
+                movies.value = service.getFilmParMotsCle(motcle, api_key).results
+            }
         }
     }
 }

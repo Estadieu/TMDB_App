@@ -52,8 +52,6 @@ class MainActivity : ComponentActivity() {
             */
             val navController = rememberNavController()
             MyApp(navController)
-
-
         }
     }
 }
