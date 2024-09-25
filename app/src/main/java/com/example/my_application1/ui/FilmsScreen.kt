@@ -24,12 +24,12 @@ fun FilmsScreen(navController: NavController, viewModel: MainViewModel, windowCl
     val moviesState = viewModel.movies.collectAsState()
     val movies = moviesState.value
 
-    // Vérifier si la liste est vide et déclencher la recherche
-    if (movies.isEmpty()) {
+    //Déclencher la recherche
+    LaunchedEffect(Unit) {
         viewModel.searchMoviesPopular()
     }
 
-    // Calculer le nombre de colonnes en fonction de la taille de l'écran
+    // Calculer le nombre de colonnes de mon app fonction de la taille de l'écran
     val columns = when (windowClass.windowWidthSizeClass) {
         WindowWidthSizeClass.COMPACT -> 2  // Deux colonnes -> pour petits écrans
         WindowWidthSizeClass.MEDIUM -> 3   // Trois colonnes -> pour écrans moyens
