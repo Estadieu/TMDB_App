@@ -11,6 +11,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 class MainViewModel : ViewModel() {
     val movies = MutableStateFlow<List<TmdbMovie>>(listOf())
+    val series = MutableStateFlow<List<Serie>>(listOf())
+    val actors = MutableStateFlow<List<Actor>>(listOf())
     val api_key = "a6f34ffd317094fe364b44e6dbd6d5bc"
 
 
@@ -28,7 +30,7 @@ class MainViewModel : ViewModel() {
         .build()
         .create(Tmdbapi::class.java);
 
-
+    //Pour les Films
     fun searchMovies(motcle: String) {
         viewModelScope.launch {
             if (motcle.isBlank()) {
@@ -38,6 +40,34 @@ class MainViewModel : ViewModel() {
                 // Sinon, on filtre les films par le mot-clé
                 movies.value = service.getFilmParMotsCle(motcle, api_key).results
             }
+        }
+    }
+
+    //Pour les Series
+    fun searchSeries(motcle: String) {
+        viewModelScope.launch {
+            if (motcle.isBlank()) {
+                // Si aucun mot-clé n'est fourni, on affiche les series
+                series.value = service.lastserieOfWeek(api_key).results
+            } else {
+                // Sinon, on filtre les series par le mot-clé
+                series.value = service.getSerieParMotsCle(motcle, api_key).results
+            }
+
+        }
+    }
+
+    //Pour les Acteurs
+    fun searchActors(motcle: String) {
+        viewModelScope.launch {
+            if (motcle.isBlank()) {
+                // Si aucun mot-clé n'est fourni, on affiche les acteurs
+                actors.value = service.lastactorOfWeek(api_key).results
+            } else {
+                // Sinon, on filtre les series par le mot-clé
+                actors.value = service.getActorsParMotsCle(motcle, api_key).results
+            }
+
         }
     }
 }

@@ -11,21 +11,19 @@ interface Tmdbapi{
     //Films
     @GET("trending/movie/week")
     suspend fun lastmoviesOfWeek(@Query("api_key") api_key: String): TmdbMovieResult
-
-
     @GET("search/movie")
     suspend fun getFilmParMotsCle(@Query("query") keyWord: String, @Query("api_key") api_key: String) : TmdbMovieResult
 
     //Séries
     @GET("trending/tv/week")
     suspend fun lastserieOfWeek(@Query("api_key") api_key: String): Series
-
-    @GET("trending/person/week")
-    suspend fun lastactorOfWeek(@Query("api_key") api_key: String): Actors
-
+    @GET("search/movie")
+    suspend fun getSerieParMotsCle(@Query("query") keyWord: String, @Query("api_key") api_key: String) : Series
     @GET("tv/{id}")
     suspend fun overviewOfSerie(@Path("id") id: String, @Query("api_key") api_key: String): DetailedSerie
 
+    //Actors
+    @GET("trending/person/week")
+    suspend fun lastactorOfWeek(@Query("api_key") api_key: String): Actors
     @GET("search/person")
-    suspend fun searchActor(@Query("query") keyWord: String, @Query("api_key") api_key: String) : Actors
-}
+    suspend fun getActorsParMotsCle(@Query("query") keyWord: String, @Query("api_key") api_key: String) : Actors}

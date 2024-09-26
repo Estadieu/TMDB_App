@@ -27,7 +27,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.example.my_application1.ui.MainViewModel
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import com.example.my_application1.ui.ResponsiveHomeScreen
+//import com.example.my_application1.ui.ResponsiveHomeScreen
 
 
 @Serializable
@@ -61,7 +61,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp(navController: NavHostController) {
     val currentDestination = navController.currentBackStackEntry?.destination
-    val model : MainViewModel = viewModel()
+    val modelFilm : MainViewModel = viewModel()
+    val modelSeries : MainViewModel = viewModel()
+    val modelActors : MainViewModel = viewModel()
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     Scaffold(
         bottomBar = {
@@ -84,7 +86,7 @@ fun MyApp(navController: NavHostController) {
                 )
                 BottomNavigationItem(
                     icon = { Icon(Icons.Filled.Person, contentDescription = "Acteurs") },
-                    label = { Text("Séries") },
+                    label = { Text("Acteurs") },
                     selected = currentDestination?.hierarchy?.any {
                         it.hasRoute<ActorsScreendest>()
                     } ==true,
@@ -98,9 +100,9 @@ fun MyApp(navController: NavHostController) {
             startDestination = FilmsScreendest(),
             Modifier.padding(innerPadding)
         ) {
-            composable<FilmsScreendest> { FilmsScreen(navController,model,windowSizeClass) }
-            composable<SeriesScreendest> { SeriesScreen(navController) }
-            composable<ActorsScreendest> { ActorsScreen(navController) }
+            composable<FilmsScreendest> { FilmsScreen(navController,modelFilm,windowSizeClass) }
+            composable<SeriesScreendest> { SeriesScreen(navController,modelSeries,windowSizeClass) }
+            composable<ActorsScreendest> { ActorsScreen(navController, modelActors, windowSizeClass) }
         }
     }
 }
