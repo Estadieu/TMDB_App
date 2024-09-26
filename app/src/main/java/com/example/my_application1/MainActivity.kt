@@ -2,10 +2,13 @@ package com.example.my_application1
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
+import androidx.compose.material.NavigationRail
+import androidx.compose.material.NavigationRailItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlayArrow
@@ -27,15 +30,15 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.example.my_application1.ui.MainViewModel
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.window.core.layout.WindowWidthSizeClass
+
 //import com.example.my_application1.ui.ResponsiveHomeScreen
 
-
+//Pour les destination
 @Serializable
 class FilmsScreendest
-
 @Serializable
 class SeriesScreendest
-
 @Serializable
 class ActorsScreendest
 
@@ -57,7 +60,6 @@ class MainActivity : ComponentActivity() {
 }
 
 
-
 @Composable
 fun MyApp(navController: NavHostController) {
     val currentDestination = navController.currentBackStackEntry?.destination
@@ -65,44 +67,91 @@ fun MyApp(navController: NavHostController) {
     val modelSeries : MainViewModel = viewModel()
     val modelActors : MainViewModel = viewModel()
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-    Scaffold(
-        bottomBar = {
-            BottomNavigation {
-                BottomNavigationItem(
-                    icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "Films") },
-                    label = { Text("Films") },
-                    selected = currentDestination?.hierarchy?.any {
-                        it.hasRoute<FilmsScreendest>()
-                    } == true,
-                    onClick = { navController.navigate(FilmsScreendest()) }
-                )
-                BottomNavigationItem(
-                    icon = { Icon(Icons.Filled.Star, contentDescription = "Séries") },
-                    label = { Text("Séries") },
-                    selected = currentDestination?.hierarchy?.any {
-                        it.hasRoute<SeriesScreendest>()
-                    } ==true,
-                    onClick = { navController.navigate(SeriesScreendest()) }
-                )
-                BottomNavigationItem(
-                    icon = { Icon(Icons.Filled.Person, contentDescription = "Acteurs") },
-                    label = { Text("Acteurs") },
-                    selected = currentDestination?.hierarchy?.any {
-                        it.hasRoute<ActorsScreendest>()
-                    } ==true,
-                    onClick = { navController.navigate(ActorsScreendest()) }
-                )
+
+    if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
+        // Pour les écrans compacts, on utilise une BottomNavigation
+        Scaffold(
+            bottomBar = {
+                BottomNavigation {
+                    BottomNavigationItem(
+                        icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "Films") },
+                        label = { Text("Films") },
+                        selected = currentDestination?.hierarchy?.any {
+                            it.hasRoute<FilmsScreendest>()
+                        } == true,
+                        onClick = { navController.navigate(FilmsScreendest()) }
+                    )
+                    BottomNavigationItem(
+                        icon = { Icon(Icons.Filled.Star, contentDescription = "Séries") },
+                        label = { Text("Séries") },
+                        selected = currentDestination?.hierarchy?.any {
+                            it.hasRoute<SeriesScreendest>()
+                        } == true,
+                        onClick = { navController.navigate(SeriesScreendest()) }
+                    )
+                    BottomNavigationItem(
+                        icon = { Icon(Icons.Filled.Person, contentDescription = "Acteurs") },
+                        label = { Text("Acteurs") },
+                        selected = currentDestination?.hierarchy?.any {
+                            it.hasRoute<ActorsScreendest>()
+                        } == true,
+                        onClick = { navController.navigate(ActorsScreendest()) }
+                    )
+                }
+            }
+        ) { innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = FilmsScreendest(),
+                Modifier.padding(innerPadding)
+            ) {
+                composable<FilmsScreendest> { FilmsScreen(navController, modelFilm, windowSizeClass) }
+                composable<SeriesScreendest> { SeriesScreen(navController, modelSeries, windowSizeClass) }
+                composable<ActorsScreendest> { ActorsScreen(navController, modelActors, windowSizeClass) }
             }
         }
-    ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = FilmsScreendest(),
-            Modifier.padding(innerPadding)
-        ) {
-            composable<FilmsScreendest> { FilmsScreen(navController,modelFilm,windowSizeClass) }
-            composable<SeriesScreendest> { SeriesScreen(navController,modelSeries,windowSizeClass) }
-            composable<ActorsScreendest> { ActorsScreen(navController, modelActors, windowSizeClass) }
-        }
+    } else {
+        // Pour les écrans plus larges, on utilise une SideNavigation (NavigationRail)
+        Scaffold(
+            content = { innerPadding ->
+                Row(Modifier.padding(innerPadding)) {
+                    NavigationRail {
+                        NavigationRailItem(
+                            icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "Films") },
+                            label = { Text("Films") },
+                            selected = currentDestination?.hierarchy?.any {
+                                it.hasRoute<FilmsScreendest>()
+                            } == true,
+                            onClick = { navController.navigate(FilmsScreendest()) }
+                        )
+                        NavigationRailItem(
+                            icon = { Icon(Icons.Filled.Star, contentDescription = "Séries") },
+                            label = { Text("Séries") },
+                            selected = currentDestination?.hierarchy?.any {
+                                it.hasRoute<SeriesScreendest>()
+                            } == true,
+                            onClick = { navController.navigate(SeriesScreendest()) }
+                        )
+                        NavigationRailItem(
+                            icon = { Icon(Icons.Filled.Person, contentDescription = "Acteurs") },
+                            label = { Text("Acteurs") },
+                            selected = currentDestination?.hierarchy?.any {
+                                it.hasRoute<ActorsScreendest>()
+                            } == true,
+                            onClick = { navController.navigate(ActorsScreendest()) }
+                        )
+                    }
+                    NavHost(
+                        navController = navController,
+                        startDestination = FilmsScreendest(),
+                        Modifier.padding(innerPadding)
+                    ) {
+                        composable<FilmsScreendest> { FilmsScreen(navController, modelFilm, windowSizeClass) }
+                        composable<SeriesScreendest> { SeriesScreen(navController, modelSeries, windowSizeClass) }
+                        composable<ActorsScreendest> { ActorsScreen(navController, modelActors, windowSizeClass) }
+                    }
+                }
+            }
+        )
     }
 }
