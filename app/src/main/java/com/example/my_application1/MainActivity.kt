@@ -31,6 +31,8 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import com.example.my_application1.ui.MainViewModel
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.example.my_application1.ui.FilmSelected
+import kotlinx.serialization.json.Json
 
 //import com.example.my_application1.ui.ResponsiveHomeScreen
 
@@ -42,6 +44,10 @@ class SeriesScreendest
 @Serializable
 class ActorsScreendest
 
+@Serializable
+class FilmDetailsDest(val movieId: String)
+@Serializable
+class SeriesDetailsDest(val seriesId: String)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,13 +69,12 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp(navController: NavHostController) {
     val currentDestination = navController.currentBackStackEntry?.destination
-    val modelFilm : MainViewModel = viewModel()
-    val modelSeries : MainViewModel = viewModel()
-    val modelActors : MainViewModel = viewModel()
+    val modelFilm: MainViewModel = viewModel()
+    val modelSeries: MainViewModel = viewModel()
+    val modelActors: MainViewModel = viewModel()
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 
     if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
-        // Pour les écrans compacts, on utilise une BottomNavigation
         Scaffold(
             bottomBar = {
                 BottomNavigation {
@@ -108,10 +113,17 @@ fun MyApp(navController: NavHostController) {
                 composable<FilmsScreendest> { FilmsScreen(navController, modelFilm, windowSizeClass) }
                 composable<SeriesScreendest> { SeriesScreen(navController, modelSeries, windowSizeClass) }
                 composable<ActorsScreendest> { ActorsScreen(navController, modelActors, windowSizeClass) }
+                composable("film_details/{movieDetails}") { backStackEntry ->
+                    val movieDetailsJson = backStackEntry.arguments?.getString("movieDetails")
+                    movieDetailsJson?.let {
+                        val movieDetails = Json.decodeFromString<FilmDetailsDest>(it)
+                        FilmSelected(navController, modelFilm, movieDetails.movieId, windowSizeClass)
+                    }
+                }
+
             }
         }
     } else {
-        // Pour les écrans plus larges, on utilise une SideNavigation (NavigationRail)
         Scaffold(
             content = { innerPadding ->
                 Row(Modifier.padding(innerPadding)) {
@@ -146,9 +158,34 @@ fun MyApp(navController: NavHostController) {
                         startDestination = FilmsScreendest(),
                         Modifier.padding(innerPadding)
                     ) {
-                        composable<FilmsScreendest> { FilmsScreen(navController, modelFilm, windowSizeClass) }
-                        composable<SeriesScreendest> { SeriesScreen(navController, modelSeries, windowSizeClass) }
-                        composable<ActorsScreendest> { ActorsScreen(navController, modelActors, windowSizeClass) }
+                        composable<FilmsScreendest> {
+                            FilmsScreen(
+                                navController,
+                                modelFilm,
+                                windowSizeClass
+                            )
+                        }
+                        composable<SeriesScreendest> {
+                            SeriesScreen(
+                                navController,
+                                modelSeries,
+                                windowSizeClass
+                            )
+                        }
+                        composable<ActorsScreendest> {
+                            ActorsScreen(
+                                navController,
+                                modelActors,
+                                windowSizeClass
+                            )
+                        }
+                        composable("film_details/{movieDetails}") { backStackEntry ->
+                            val movieDetailsJson = backStackEntry.arguments?.getString("movieDetails")
+                            movieDetailsJson?.let {
+                                val movieDetails = Json.decodeFromString<FilmDetailsDest>(it)
+                                FilmSelected(navController, modelFilm, movieDetails.movieId, windowSizeClass)
+                            }
+                        }
                     }
                 }
             }

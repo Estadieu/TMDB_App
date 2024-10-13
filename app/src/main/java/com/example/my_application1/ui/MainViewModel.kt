@@ -13,6 +13,8 @@ class MainViewModel : ViewModel() {
     val movies = MutableStateFlow<List<TmdbMovie>>(listOf())
     val series = MutableStateFlow<List<Serie>>(listOf())
     val actors = MutableStateFlow<List<Actor>>(listOf())
+    val movies_select = MutableStateFlow<DetailedMovie>(DetailedMovie())
+    val series_select = MutableStateFlow<DetailedSerie>(DetailedSerie())
     val api_key = "a6f34ffd317094fe364b44e6dbd6d5bc"
 
 
@@ -70,4 +72,19 @@ class MainViewModel : ViewModel() {
 
         }
     }
+
+    fun selectedMovies(id : String){
+        viewModelScope.launch {
+            movies_select.value = service.selectOfMovie(id,api_key)
+        }
+    }
+
+    fun selectedSeries(id : String){
+        viewModelScope.launch {
+            series_select.value = service.selectOfSerie(id,api_key)
+        }
+    }
+
+    
+
 }
