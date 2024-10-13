@@ -1,4 +1,5 @@
 package com.example.my_application1
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -32,20 +33,21 @@ import com.example.my_application1.ui.MainViewModel
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.my_application1.ui.FilmSelected
+import com.example.my_application1.ui.SeriesSelected
 import kotlinx.serialization.json.Json
 
-//import com.example.my_application1.ui.ResponsiveHomeScreen
-
-//Pour les destination
 @Serializable
 class FilmsScreendest
+
 @Serializable
 class SeriesScreendest
+
 @Serializable
 class ActorsScreendest
 
 @Serializable
 class FilmDetailsDest(val movieId: String)
+
 @Serializable
 class SeriesDetailsDest(val seriesId: String)
 
@@ -53,18 +55,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            /*
-            //Pour Afficher le profil
-            // taille de la fenêtre
-            val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-            ResponsiveHomeScreen(windowClass = windowSizeClass)
-            */
             val navController = rememberNavController()
             MyApp(navController)
         }
     }
 }
-
 
 @Composable
 fun MyApp(navController: NavHostController) {
@@ -120,7 +115,13 @@ fun MyApp(navController: NavHostController) {
                         FilmSelected(navController, modelFilm, movieDetails.movieId, windowSizeClass)
                     }
                 }
-
+                composable("series_details/{seriesDetails}") { backStackEntry ->
+                    val seriesDetailsJson = backStackEntry.arguments?.getString("seriesDetails")
+                    seriesDetailsJson?.let {
+                        val seriesDetails = Json.decodeFromString<SeriesDetailsDest>(it)
+                        SeriesSelected(navController, modelSeries, seriesDetails.seriesId, windowSizeClass)
+                    }
+                }
             }
         }
     } else {
@@ -184,6 +185,13 @@ fun MyApp(navController: NavHostController) {
                             movieDetailsJson?.let {
                                 val movieDetails = Json.decodeFromString<FilmDetailsDest>(it)
                                 FilmSelected(navController, modelFilm, movieDetails.movieId, windowSizeClass)
+                            }
+                        }
+                        composable("series_details/{seriesDetails}") { backStackEntry ->
+                            val seriesDetailsJson = backStackEntry.arguments?.getString("seriesDetails")
+                            seriesDetailsJson?.let {
+                                val seriesDetails = Json.decodeFromString<SeriesDetailsDest>(it)
+                                SeriesSelected(navController, modelSeries, seriesDetails.seriesId, windowSizeClass)
                             }
                         }
                     }
