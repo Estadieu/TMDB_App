@@ -23,6 +23,7 @@ import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
+import com.example.my_application1.ui.theme.PurpleGrey40
 
 
 @Composable
@@ -91,7 +92,7 @@ fun ActorItem(actor: Actor, windowClass: WindowSizeClass) {
     val textHeightFraction = 0.1f // Le texte prend 10% de la hauteur
 
     // Couleur
-    val backgroundColor = Color(0xFF6200EE) // Violet par défaut
+    val backgroundColor = PurpleGrey40 // Violet par défaut
 
     // Utilisation d'une Card pour encapsuler le contenu d'un acteur
     Card(

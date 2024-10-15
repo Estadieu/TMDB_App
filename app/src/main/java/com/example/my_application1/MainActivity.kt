@@ -31,9 +31,14 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.example.my_application1.ui.MainViewModel
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.ui.graphics.Color
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.my_application1.ui.FilmSelected
+import com.example.my_application1.ui.ResponsiveHomeScreen
 import com.example.my_application1.ui.SeriesSelected
+import com.example.my_application1.ui.theme.My_Application1Theme
+import com.example.my_application1.ui.theme.PurpleGrey40
+import com.example.my_application1.ui.theme.PurpleGrey80
 import kotlinx.serialization.json.Json
 
 @Serializable
@@ -55,8 +60,17 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val navController = rememberNavController()
-            MyApp(navController)
+            // Appliquer le thème
+            My_Application1Theme {
+                /*
+                //Pour Afficher le profil
+                // taille de la fenêtre
+                    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+                    ResponsiveHomeScreen(windowClass = windowSizeClass)
+                */
+                val navController = rememberNavController()
+                MyApp(navController)
+            }
         }
     }
 }
@@ -71,31 +85,41 @@ fun MyApp(navController: NavHostController) {
 
     if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
         Scaffold(
+            containerColor = PurpleGrey80,
             bottomBar = {
-                BottomNavigation {
+                BottomNavigation(
+                    backgroundColor = PurpleGrey40,
+                    contentColor = Color.White // Couleur par défaut des icônes
+                ) {
                     BottomNavigationItem(
                         icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "Films") },
-                        label = { Text("Films") },
+                        label = { Text("Films", color = Color.White) }, // Texte en blanc
                         selected = currentDestination?.hierarchy?.any {
                             it.hasRoute<FilmsScreendest>()
                         } == true,
-                        onClick = { navController.navigate(FilmsScreendest()) }
+                        onClick = { navController.navigate(FilmsScreendest()) },
+                        selectedContentColor = Color.Black, // Couleur des icônes et texte sélectionnés
+                        unselectedContentColor = Color.White // Couleur des icônes et texte non sélectionnés
                     )
                     BottomNavigationItem(
                         icon = { Icon(Icons.Filled.Star, contentDescription = "Séries") },
-                        label = { Text("Séries") },
+                        label = { Text("Séries", color = Color.White) }, // Texte en blanc
                         selected = currentDestination?.hierarchy?.any {
                             it.hasRoute<SeriesScreendest>()
                         } == true,
-                        onClick = { navController.navigate(SeriesScreendest()) }
+                        onClick = { navController.navigate(SeriesScreendest()) },
+                        selectedContentColor = Color.Black,
+                        unselectedContentColor = Color.White
                     )
                     BottomNavigationItem(
                         icon = { Icon(Icons.Filled.Person, contentDescription = "Acteurs") },
-                        label = { Text("Acteurs") },
+                        label = { Text("Acteurs", color = Color.White) }, // Texte en blanc
                         selected = currentDestination?.hierarchy?.any {
                             it.hasRoute<ActorsScreendest>()
                         } == true,
-                        onClick = { navController.navigate(ActorsScreendest()) }
+                        onClick = { navController.navigate(ActorsScreendest()) },
+                        selectedContentColor = Color.Black,
+                        unselectedContentColor = Color.White
                     )
                 }
             }
@@ -131,7 +155,7 @@ fun MyApp(navController: NavHostController) {
                     NavigationRail {
                         NavigationRailItem(
                             icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "Films") },
-                            label = { Text("Films") },
+                            label = { Text("Films", color = Color.White) },
                             selected = currentDestination?.hierarchy?.any {
                                 it.hasRoute<FilmsScreendest>()
                             } == true,
@@ -139,7 +163,7 @@ fun MyApp(navController: NavHostController) {
                         )
                         NavigationRailItem(
                             icon = { Icon(Icons.Filled.Star, contentDescription = "Séries") },
-                            label = { Text("Séries") },
+                            label = { Text("Séries", color = Color.White) },
                             selected = currentDestination?.hierarchy?.any {
                                 it.hasRoute<SeriesScreendest>()
                             } == true,
@@ -147,7 +171,7 @@ fun MyApp(navController: NavHostController) {
                         )
                         NavigationRailItem(
                             icon = { Icon(Icons.Filled.Person, contentDescription = "Acteurs") },
-                            label = { Text("Acteurs") },
+                            label = { Text("Acteurs", color = Color.White) },
                             selected = currentDestination?.hierarchy?.any {
                                 it.hasRoute<ActorsScreendest>()
                             } == true,

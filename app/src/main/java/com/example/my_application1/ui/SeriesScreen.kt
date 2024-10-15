@@ -21,6 +21,7 @@ import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
 import com.example.my_application1.SeriesDetailsDest
+import com.example.my_application1.ui.theme.PurpleGrey40
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -84,7 +85,7 @@ fun SerieItem(serie: Serie, windowClass: WindowSizeClass, onClick: () -> Unit) {
     }
 
     val textHeightFraction = 0.1f
-    val backgroundColor = Color(0xFF6200EE)
+    val backgroundColor = PurpleGrey40
 
     Card(
         modifier = Modifier
