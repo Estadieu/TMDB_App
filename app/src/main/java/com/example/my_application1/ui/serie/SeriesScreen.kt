@@ -1,4 +1,4 @@
-package com.example.my_application1.ui
+package com.example.my_application1.ui.serie
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -6,43 +6,47 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import androidx.window.core.layout.WindowHeightSizeClass
-import androidx.window.core.layout.WindowWidthSizeClass
 import androidx.window.core.layout.WindowSizeClass
-import com.example.my_application1.FilmDetailsDest
+import androidx.window.core.layout.WindowWidthSizeClass
+import coil.compose.AsyncImage
+import com.example.my_application1.SeriesDetailsDest
+import com.example.my_application1.ui.Model.MainViewModel
+import com.example.my_application1.ui.Model.Serie
 import com.example.my_application1.ui.theme.PurpleGrey40
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Composable
-fun FilmsScreen(navController: NavController, viewModel: MainViewModel, windowClass: WindowSizeClass) {
-    val moviesState = viewModel.movies.collectAsState()
-    val movies = moviesState.value
+fun SeriesScreen(navController: NavController, viewModel: MainViewModel, windowClass: WindowSizeClass) {
+    val seriesState = viewModel.series.collectAsState()
+    val series = seriesState.value
     var searchQuery by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
-        viewModel.searchMovies("")
+        viewModel.searchSeries("")
     }
 
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Barre de recherche
         TextField(
             value = searchQuery,
             onValueChange = { query ->
                 searchQuery = query
-                viewModel.searchMovies(query)
+                viewModel.searchSeries(query)
             },
-            label = { Text("Rechercher un film...") },
+            label = { Text("Rechercher une Serie...") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -63,12 +67,10 @@ fun FilmsScreen(navController: NavController, viewModel: MainViewModel, windowCl
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(movies) { movie ->
-                MovieItem(movie = movie, windowClass = windowClass) {
-                    // Sérialiser l'objet FilmDetailsDest en JSON
-                    val movieDetailsJson = Json.encodeToString(FilmDetailsDest(movie.id.toString()))
-                    // Naviguer en passant le JSON dans l'argument de la route
-                    navController.navigate("film_details/$movieDetailsJson")
+            items(series) { serie ->
+                SerieItem(serie = serie, windowClass = windowClass) {
+                    val seriesDetailsJson = Json.encodeToString(SeriesDetailsDest(serie.id.toString()))
+                    navController.navigate("series_details/$seriesDetailsJson")
                 }
             }
         }
@@ -76,7 +78,7 @@ fun FilmsScreen(navController: NavController, viewModel: MainViewModel, windowCl
 }
 
 @Composable
-fun MovieItem(movie: TmdbMovie, windowClass: WindowSizeClass, onClick: () -> Unit) {
+fun SerieItem(serie: Serie, windowClass: WindowSizeClass, onClick: () -> Unit) {
     val imageHeightFraction = when (windowClass.windowHeightSizeClass) {
         WindowHeightSizeClass.COMPACT -> 0.2f
         WindowHeightSizeClass.MEDIUM -> 0.25f
@@ -91,7 +93,7 @@ fun MovieItem(movie: TmdbMovie, windowClass: WindowSizeClass, onClick: () -> Uni
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
-            .clickable { onClick() }, // Ajout du clic ici
+            .clickable { onClick() },
         shape = RoundedCornerShape(10.dp),
         elevation = CardDefaults.cardElevation(7.dp),
         colors = CardDefaults.cardColors(containerColor = backgroundColor)
@@ -103,22 +105,24 @@ fun MovieItem(movie: TmdbMovie, windowClass: WindowSizeClass, onClick: () -> Uni
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             AsyncImage(
-                model = "https://image.tmdb.org/t/p/w400${movie.poster_path}",
-                contentDescription = movie.original_title,
+                model = "https://image.tmdb.org/t/p/w400${serie.poster_path}",
+                contentDescription = serie.name,
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(imageHeightFraction)
             )
+
             Text(
-                text = movie.original_title,
+                text = serie.name,
                 fontSize = 14.sp,
                 color = Color.White,
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(textHeightFraction)
             )
+
             Text(
-                text = movie.release_date,
+                text = serie.first_air_date,
                 fontSize = 12.sp,
                 color = Color.White.copy(alpha = 0.7f),
                 modifier = Modifier

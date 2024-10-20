@@ -1,4 +1,4 @@
-package com.example.my_application1.ui
+package com.example.my_application1.ui.serie
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import androidx.window.core.layout.WindowSizeClass
+import com.example.my_application1.ui.Model.MainViewModel
 
 @Composable
 fun SeriesSelected(navController: NavController, viewModel: MainViewModel, id: String, windowClass: WindowSizeClass) {

@@ -1,7 +1,8 @@
-package com.example.my_application1.ui
+package com.example.my_application1.ui.Model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.my_application1.ui.Api.Tmdbapi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient

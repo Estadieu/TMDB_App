@@ -1,6 +1,10 @@
-package com.example.my_application1.ui
+package com.example.my_application1.ui.Api
 
-import com.example.my_application1.ui.TmdbMovie
+import com.example.my_application1.ui.Model.Actors
+import com.example.my_application1.ui.Model.DetailedMovie
+import com.example.my_application1.ui.Model.DetailedSerie
+import com.example.my_application1.ui.Model.Series
+import com.example.my_application1.ui.Model.TmdbMovieResult
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -28,4 +32,5 @@ interface Tmdbapi{
     @GET("trending/person/week")
     suspend fun lastactorOfWeek(@Query("api_key") api_key: String): Actors
     @GET("search/person")
-    suspend fun getActorsParMotsCle(@Query("query") keyWord: String, @Query("api_key") api_key: String) : Actors}
+    suspend fun getActorsParMotsCle(@Query("query") keyWord: String, @Query("api_key") api_key: String) : Actors
+}
