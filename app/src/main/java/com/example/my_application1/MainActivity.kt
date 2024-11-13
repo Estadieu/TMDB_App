@@ -50,10 +50,10 @@ class SeriesScreendest
 class ActorsScreendest
 
 @Serializable
-class FilmDetailsDest(val movieId: String)
+class FilmDetailsDest(val movieId: Int)
 
 @Serializable
-class SeriesDetailsDest(val seriesId: String)
+class SeriesDetailsDest(val seriesId: Int)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

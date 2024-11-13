@@ -17,7 +17,7 @@ import androidx.window.core.layout.WindowSizeClass
 import com.example.my_application1.ui.Model.MainViewModel
 
 @Composable
-fun SeriesSelected(navController: NavController, viewModel: MainViewModel, id: String, windowClass: WindowSizeClass) {
+fun SeriesSelected(navController: NavController, viewModel: MainViewModel, id: Int, windowClass: WindowSizeClass) {
     val seriesSelected = viewModel.series_select.collectAsState()
 
     LaunchedEffect(true) {

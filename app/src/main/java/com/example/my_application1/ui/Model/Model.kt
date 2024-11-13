@@ -135,21 +135,6 @@ data class Genre(
     val name: String = ""
 )
 
-data class Cast(
-    val adult: Boolean = false,
-    val cast_id: Int = 0,
-    val character: String = "",
-    val credit_id: String = "",
-    val gender: Int = 0,
-    val id: Int = 0,
-    val known_for_department: String = "",
-    val name: String = "",
-    val order: Int = 0,
-    val original_name: String = "",
-    val popularity: Double = 0.0,
-    val profile_path: String = ""
-)
-
 data class DetailedSerie(
     val adult: Boolean = false,
     val backdrop_path: String = "",
@@ -186,6 +171,58 @@ data class DetailedSerie(
     val vote_count: Int = 0
 )
 
+data class Cast(
+    val adult: Boolean,
+    val cast_id: Int,
+    val character: String,
+    val credit_id: String,
+    val gender: Int,
+    val id: Int,
+    val known_for_department: String,
+    val name: String,
+    val order: Int,
+    val original_name: String,
+    val popularity: Double,
+    val profile_path: String
+)
+
+data class MovieCreditsResult(
+    val cast: List<Cast>,
+    val crew: List<Crew>,
+    val id: Int
+)
+
+data class Crew(
+    val adult: Boolean,
+    val credit_id: String,
+    val department: String,
+    val gender: Int,
+    val id: Int,
+    val job: String,
+    val known_for_department: String,
+    val name: String,
+    val original_name: String,
+    val popularity: Double,
+    val profile_path: String
+)
+
+
+
+data class MoviesActeurs(
+    val adult: Boolean,
+    val cast_id: Int,
+    val character: String,
+    val credit_id: String,
+    val gender: Int,
+    val id: Int,
+    val known_for_department: String,
+    val name: String,
+    val order: Int,
+    val original_name: String,
+    val popularity: Double,
+    val profile_path: String
+)
+
 data class Network(
     val id: Int = 0,
     val logo_path: String = "",
@@ -216,6 +253,8 @@ data class Season(
     val season_number: Int = 0,
     val vote_average: Double = 0.0
 )
+
+
 
 data class SpokenLanguage(
     val english_name: String = "",

@@ -69,7 +69,7 @@ fun SeriesScreen(navController: NavController, viewModel: MainViewModel, windowC
         ) {
             items(series) { serie ->
                 SerieItem(serie = serie, windowClass = windowClass) {
-                    val seriesDetailsJson = Json.encodeToString(SeriesDetailsDest(serie.id.toString()))
+                    val seriesDetailsJson = Json.encodeToString(SeriesDetailsDest(serie.id))
                     navController.navigate("series_details/$seriesDetailsJson")
                 }
             }

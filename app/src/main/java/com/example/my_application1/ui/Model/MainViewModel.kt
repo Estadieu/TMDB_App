@@ -16,6 +16,7 @@ class MainViewModel : ViewModel() {
     val actors = MutableStateFlow<List<Actor>>(listOf())
     val movies_select = MutableStateFlow<DetailedMovie>(DetailedMovie())
     val series_select = MutableStateFlow<DetailedSerie>(DetailedSerie())
+    val movieCast = MutableStateFlow<List<Cast>>(emptyList())
     val api_key = "a6f34ffd317094fe364b44e6dbd6d5bc"
 
 
@@ -74,15 +75,27 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun selectedMovies(id : String){
+    fun selectedMovies(id : Int){
         viewModelScope.launch {
             movies_select.value = service.selectOfMovie(id,api_key)
         }
     }
 
-    fun selectedSeries(id : String){
+    fun selectedSeries(id : Int){
         viewModelScope.launch {
             series_select.value = service.selectOfSerie(id,api_key)
+        }
+    }
+
+
+    fun getActeurMovie(id: Int) {
+        viewModelScope.launch {
+            try {
+                val result = service.acteurfilm(id, api_key)
+                movieCast.value = result.cast
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 

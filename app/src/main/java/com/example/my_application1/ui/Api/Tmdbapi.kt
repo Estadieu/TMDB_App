@@ -3,6 +3,8 @@ package com.example.my_application1.ui.Api
 import com.example.my_application1.ui.Model.Actors
 import com.example.my_application1.ui.Model.DetailedMovie
 import com.example.my_application1.ui.Model.DetailedSerie
+import com.example.my_application1.ui.Model.MovieCreditsResult
+import com.example.my_application1.ui.Model.MoviesActeurs
 import com.example.my_application1.ui.Model.Series
 import com.example.my_application1.ui.Model.TmdbMovieResult
 import retrofit2.http.GET
@@ -18,7 +20,10 @@ interface Tmdbapi{
     @GET("search/movie")
     suspend fun getFilmParMotsCle(@Query("query") keyWord: String, @Query("api_key") api_key: String) : TmdbMovieResult
     @GET("movie/{id}")
-    suspend fun selectOfMovie(@Path("id") id: String, @Query("api_key") api_key: String): DetailedMovie
+    suspend fun selectOfMovie(@Path("id") id: Int, @Query("api_key") api_key: String): DetailedMovie
+    //Pour afficher les acteurs d'un film
+    @GET("movie/{id}/credits")
+    suspend fun acteurfilm(@Path("id") id: Int, @Query("api_key") api_Key: String): MovieCreditsResult
 
     //Séries
     @GET("trending/tv/week")
@@ -26,7 +31,7 @@ interface Tmdbapi{
     @GET("search/movie")
     suspend fun getSerieParMotsCle(@Query("query") keyWord: String, @Query("api_key") api_key: String) : Series
     @GET("tv/{id}")
-    suspend fun selectOfSerie(@Path("id") id: String, @Query("api_key") api_key: String): DetailedSerie
+    suspend fun selectOfSerie(@Path("id") id: Int, @Query("api_key") api_key: String): DetailedSerie
 
     //Actors
     @GET("trending/person/week")

@@ -24,14 +24,19 @@ import com.example.my_application1.ui.Model.MainViewModel
 import com.example.my_application1.ui.theme.PurpleGrey40
 import com.example.my_application1.ui.theme.PurpleGrey80
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.ui.platform.LocalContext
+import coil.request.ImageRequest
+import coil.transform.CircleCropTransformation
 
 
 @Composable
-fun FilmSelected(navController: NavController, viewModel: MainViewModel, id: String, windowClass: WindowSizeClass) {
+fun FilmSelected(navController: NavController, viewModel: MainViewModel, id: Int, windowClass: WindowSizeClass) {
     val filmSelected = viewModel.movies_select.collectAsState()
+    val movieActeurs by viewModel.movieCast.collectAsState()
 
     LaunchedEffect(true) {
         viewModel.selectedMovies(id)
+        viewModel.getActeurMovie(id)
     }
 
     // Couleur de fond
@@ -115,6 +120,56 @@ fun FilmSelected(navController: NavController, viewModel: MainViewModel, id: Str
                     fontFamily = FontFamily.SansSerif,
                     textAlign = TextAlign.Justify
                 )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Affichage des acteurs
+                Text(
+                    text = "Acteurs principaux",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+
+                // Limiter l'affichage aux 6 premiers acteurs et les diviser en paires de 2
+                movieActeurs.take(6).chunked(2).forEach { actorPair ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        actorPair.forEach { actor ->
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.weight(1f).padding(end = 8.dp)
+                            ) {
+                                val profileUrl =
+                                    "https://image.tmdb.org/t/p/w200${actor.profile_path}"
+                                AsyncImage(
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data(profileUrl)
+                                        .transformations(CircleCropTransformation())
+                                        .build(),
+                                    contentDescription = actor.name,
+                                    modifier = Modifier
+                                        .size(100.dp)
+                                        .padding(end = 8.dp)
+                                )
+
+                                //Nom de l'acteur
+                                Text(
+                                    text = actor.name,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                        }
+                        // Ajouter un espace si la paire n'a qu'un acteur pour équilibrer
+                        if (actorPair.size == 1) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(100.dp))
             }
         }
     }

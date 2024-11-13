@@ -68,7 +68,7 @@ fun FilmsScreen(navController: NavController, viewModel: MainViewModel, windowCl
             items(movies) { movie ->
                 MovieItem(movie = movie, windowClass = windowClass) {
                     // Sérialiser l'objet FilmDetailsDest en JSON
-                    val movieDetailsJson = Json.encodeToString(FilmDetailsDest(movie.id.toString()))
+                    val movieDetailsJson = Json.encodeToString(FilmDetailsDest(movie.id))
                     // Naviguer en passant le JSON dans l'argument de la route
                     navController.navigate("film_details/$movieDetailsJson")
                 }
