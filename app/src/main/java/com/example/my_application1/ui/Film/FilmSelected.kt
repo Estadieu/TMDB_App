@@ -24,30 +24,27 @@ import com.example.my_application1.ui.Model.MainViewModel
 import com.example.my_application1.ui.theme.PurpleGrey40
 import com.example.my_application1.ui.theme.PurpleGrey80
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 
-
+//Affiche un Film select
 @Composable
 fun FilmSelected(navController: NavController, viewModel: MainViewModel, id: Int, windowClass: WindowSizeClass) {
     val filmSelected = viewModel.movies_select.collectAsState()
     val movieActeurs by viewModel.movieCast.collectAsState()
 
-    LaunchedEffect(true) {
+    //Lancement
+    LaunchedEffect(id) {
         viewModel.selectedMovies(id)
         viewModel.getActeurMovie(id)
     }
-
-    // Couleur de fond
     val backgroundColor = PurpleGrey80
-
     Box(modifier = Modifier
         .fillMaxSize()
         .background(backgroundColor)) {
-
         val isCompactScreen = LocalConfiguration.current.screenWidthDp < 600
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -63,6 +60,7 @@ fun FilmSelected(navController: NavController, viewModel: MainViewModel, id: Int
                     fontFamily = FontFamily.Serif,
                     color = Color.DarkGray
                 )
+                Spacer(modifier = Modifier.height(10.dp))
 
                 AsyncImage(
                     model = "https://image.tmdb.org/t/p/w500/" + filmSelected.value.backdrop_path,
@@ -71,6 +69,7 @@ fun FilmSelected(navController: NavController, viewModel: MainViewModel, id: Int
                         .fillMaxWidth()
                         .height(200.dp)
                         .clip(RoundedCornerShape(8.dp))
+                        .shadow(elevation = 20.dp) // Ombre avec élévation
                 )
 
                 Text(
@@ -96,7 +95,7 @@ fun FilmSelected(navController: NavController, viewModel: MainViewModel, id: Int
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(100.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     items(detailsList) { detail ->
                         FilmDetailRow(detail = detail)
@@ -125,13 +124,14 @@ fun FilmSelected(navController: NavController, viewModel: MainViewModel, id: Int
 
                 // Affichage des acteurs
                 Text(
-                    text = "Acteurs principaux",
-                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 20.sp,
+                    text = "Acteurs principaux du film",
+                    fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
-                // Limiter l'affichage aux 6 premiers acteurs et les diviser en paires de 2
+                //Affiche ma liste des acteurs
                 movieActeurs.take(6).chunked(2).forEach { actorPair ->
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
@@ -159,8 +159,10 @@ fun FilmSelected(navController: NavController, viewModel: MainViewModel, id: Int
                                 //Nom de l'acteur
                                 Text(
                                     text = actor.name,
-                                    fontWeight = FontWeight.SemiBold
-                                )
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontFamily = FontFamily.SansSerif
+
+                                    )
                             }
                         }
                         // Ajouter un espace si la paire n'a qu'un acteur pour équilibrer
@@ -182,12 +184,12 @@ fun FilmDetailRow(detail: String) {
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         fontFamily = FontFamily.SansSerif,
-        color = Color.Black,
+        color = Color.White,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(6.dp)
             .clip(RoundedCornerShape(4.dp))
             .background(PurpleGrey40)
-            .padding(8.dp)
+            .padding(6.dp)
     )
 }

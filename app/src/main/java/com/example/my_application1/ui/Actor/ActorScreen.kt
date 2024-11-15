@@ -1,5 +1,4 @@
 package com.example.my_application1.ui.Actor
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -26,7 +25,6 @@ import coil.compose.AsyncImage
 import com.example.my_application1.ui.Model.Actor
 import com.example.my_application1.ui.Model.MainViewModel
 import com.example.my_application1.ui.theme.PurpleGrey40
-
 
 @Composable
 fun ActorsScreen(navController: NavController, viewModel: MainViewModel, windowClass: WindowSizeClass) {
@@ -92,10 +90,8 @@ fun ActorItem(actor: Actor, windowClass: WindowSizeClass) {
     }
 
     val textHeightFraction = 0.1f // Le texte prend 10% de la hauteur
-
     // Couleur
     val backgroundColor = PurpleGrey40 // Violet par défaut
-
     // Utilisation d'une Card pour encapsuler le contenu d'un acteur
     Card(
         modifier = Modifier
@@ -130,9 +126,8 @@ fun ActorItem(actor: Actor, windowClass: WindowSizeClass) {
                     .fillMaxHeight(textHeightFraction) // Hauteur proportionnelle pour le texte
             )
 
-            // Date de naissance ou autre information pertinente
             Text(
-                text = actor.known_for_department, // exemple de champ pertinent
+                text = actor.known_for_department,
                 fontSize = 12.sp,
                 color = Color.White.copy(alpha = 0.7f),
                 modifier = Modifier

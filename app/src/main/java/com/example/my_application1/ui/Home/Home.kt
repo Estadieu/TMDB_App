@@ -20,11 +20,13 @@ import com.example.my_application1.R
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.ui.draw.clip
+import androidx.navigation.NavController
 import androidx.window.core.layout.WindowWidthSizeClass
 import androidx.window.core.layout.WindowSizeClass
+import com.example.my_application1.FilmsScreendest
 
 @Composable
-fun ResponsiveHomeScreen(windowClass: WindowSizeClass) {
+fun ResponsiveHomeScreen(navController: NavController, windowClass: WindowSizeClass , onStartClicked: () -> Unit) {
     when (windowClass.windowWidthSizeClass) {
         WindowWidthSizeClass.COMPACT -> {
             Column(
@@ -40,7 +42,9 @@ fun ResponsiveHomeScreen(windowClass: WindowSizeClass) {
                 Spacer(modifier = Modifier.height(20.dp))
                 ContactInfo()
                 Spacer(modifier = Modifier.height(20.dp))
-                ActionButton()
+                ActionButton{
+                    navController.navigate(FilmsScreendest()) // Redirige vers FilmsScreen
+                }
             }
         }
         else -> { // For medium and expanded screens
@@ -66,7 +70,9 @@ fun ResponsiveHomeScreen(windowClass: WindowSizeClass) {
                     Spacer(modifier = Modifier.height(20.dp))
                     ContactInfo()
                     Spacer(modifier = Modifier.height(20.dp))
-                    ActionButton()
+                    ActionButton{
+                        navController.navigate(FilmsScreendest()) // Redirige vers FilmsScreen
+                    }
                 }
             }
         }
@@ -149,8 +155,10 @@ fun ContactInfo() {
 }
 
 @Composable
-fun ActionButton() {
-    Button(onClick = { /* Pour le moment, aucune action */ }) {
+fun ActionButton(onStartClicked: () -> Unit) {
+    Button(onClick = {
+        onStartClicked()
+    }) {
         Text(text = "Démarrer")
     }
 }

@@ -11,6 +11,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.NavigationRail
 import androidx.compose.material.NavigationRailItem
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
@@ -31,9 +32,14 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.example.my_application1.ui.Model.MainViewModel
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.my_application1.ui.Film.FilmSelected
+import com.example.my_application1.ui.Home.ResponsiveHomeScreen
 import com.example.my_application1.ui.serie.SeriesSelected
 import com.example.my_application1.ui.theme.My_Application1Theme
 import com.example.my_application1.ui.theme.PurpleGrey40
@@ -50,6 +56,9 @@ class SeriesScreendest
 class ActorsScreendest
 
 @Serializable
+class Profildest
+
+@Serializable
 class FilmDetailsDest(val movieId: Int)
 
 @Serializable
@@ -61,12 +70,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             // Appliquer le thème
             My_Application1Theme {
-                /*
-                //Pour Afficher le profil
-                // taille de la fenêtre
-                    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-                    ResponsiveHomeScreen(windowClass = windowSizeClass)
-                */
                 val navController = rememberNavController()
                 MyApp(navController)
             }
@@ -81,15 +84,28 @@ fun MyApp(navController: NavHostController) {
     val modelSeries: MainViewModel = viewModel()
     val modelActors: MainViewModel = viewModel()
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    var isNavigationBarVisible by remember { mutableStateOf(false) }
 
     if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
         Scaffold(
             containerColor = PurpleGrey80,
             bottomBar = {
+
                 BottomNavigation(
                     backgroundColor = PurpleGrey40,
                     contentColor = Color.White // Couleur par défaut des icônes
                 ) {
+                    BottomNavigationItem(
+                        icon = { Icon(Icons.Filled.Person, contentDescription = "Profil") },
+                        label = { Text("Profil", color = Color.White) }, // Texte en blanc
+                        selected = currentDestination?.hierarchy?.any {
+                            it.hasRoute<Profildest>()
+                        } == true,
+                        onClick = { navController.navigate(Profildest()) },
+                        selectedContentColor = Color.Black, // Couleur des icônes et texte sélectionnés
+                        unselectedContentColor = Color.White // Couleur des icônes et texte non sélectionnés
+                    )
+
                     BottomNavigationItem(
                         icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "Films") },
                         label = { Text("Films", color = Color.White) }, // Texte en blanc
@@ -111,7 +127,7 @@ fun MyApp(navController: NavHostController) {
                         unselectedContentColor = Color.White
                     )
                     BottomNavigationItem(
-                        icon = { Icon(Icons.Filled.Person, contentDescription = "Acteurs") },
+                        icon = { Icon(Icons.Filled.AccountCircle, contentDescription = "Acteurs") },
                         label = { Text("Acteurs", color = Color.White) }, // Texte en blanc
                         selected = currentDestination?.hierarchy?.any {
                             it.hasRoute<ActorsScreendest>()
@@ -125,9 +141,10 @@ fun MyApp(navController: NavHostController) {
         ) { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = FilmsScreendest(),
+                startDestination = Profildest(),
                 Modifier.padding(innerPadding)
             ) {
+                composable<Profildest> { ResponsiveHomeScreen(navController,windowSizeClass) { isNavigationBarVisible = true }}
                 composable<FilmsScreendest> { FilmsScreen(navController, modelFilm, windowSizeClass) }
                 composable<SeriesScreendest> { SeriesScreen(navController, modelSeries, windowSizeClass) }
                 composable<ActorsScreendest> { ActorsScreen(navController, modelActors, windowSizeClass) }
@@ -152,6 +169,15 @@ fun MyApp(navController: NavHostController) {
             content = { innerPadding ->
                 Row(Modifier.padding(innerPadding)) {
                     NavigationRail {
+                        NavigationRailItem(
+                            icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "Profil") },
+                            label = { Text("Profil", color = Color.White) },
+                            selected = currentDestination?.hierarchy?.any {
+                                it.hasRoute<Profildest>()
+                            } == true,
+                            onClick = { navController.navigate(Profildest()) }
+                        )
+
                         NavigationRailItem(
                             icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "Films") },
                             label = { Text("Films", color = Color.White) },
@@ -189,6 +215,11 @@ fun MyApp(navController: NavHostController) {
                                 windowSizeClass
                             )
                         }
+                        composable<Profildest> {
+                            ResponsiveHomeScreen(navController,windowSizeClass, onStartClicked = { navController.navigate(FilmsScreendest()) } )
+                        }
+
+
                         composable<SeriesScreendest> {
                             SeriesScreen(
                                 navController,

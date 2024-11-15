@@ -17,6 +17,7 @@ class MainViewModel : ViewModel() {
     val movies_select = MutableStateFlow<DetailedMovie>(DetailedMovie())
     val series_select = MutableStateFlow<DetailedSerie>(DetailedSerie())
     val movieCast = MutableStateFlow<List<Cast>>(emptyList())
+    val seriesCast = MutableStateFlow<List<CastSerie>>(emptyList())
     val api_key = "a6f34ffd317094fe364b44e6dbd6d5bc"
 
 
@@ -75,19 +76,19 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    //Pour selection séries et films
     fun selectedMovies(id : Int){
         viewModelScope.launch {
             movies_select.value = service.selectOfMovie(id,api_key)
         }
     }
-
     fun selectedSeries(id : Int){
         viewModelScope.launch {
             series_select.value = service.selectOfSerie(id,api_key)
         }
     }
 
-
+    // Pour afficher les acteurs d'une série ou d'un film select
     fun getActeurMovie(id: Int) {
         viewModelScope.launch {
             try {
@@ -98,7 +99,14 @@ class MainViewModel : ViewModel() {
             }
         }
     }
-
-    
-
+    fun getActeurSeries(id: Int) {
+        viewModelScope.launch {
+            try {
+                val serieact = service.acteurseries(id, api_key)
+                seriesCast.value = serieact.cast
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
 }

@@ -113,7 +113,7 @@ fun SerieItem(serie: Serie, windowClass: WindowSizeClass, onClick: () -> Unit) {
             )
 
             Text(
-                text = serie.name,
+                text = serie.original_name,
                 fontSize = 14.sp,
                 color = Color.White,
                 modifier = Modifier

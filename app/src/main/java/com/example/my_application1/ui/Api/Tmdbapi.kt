@@ -5,6 +5,7 @@ import com.example.my_application1.ui.Model.DetailedMovie
 import com.example.my_application1.ui.Model.DetailedSerie
 import com.example.my_application1.ui.Model.MovieCreditsResult
 import com.example.my_application1.ui.Model.MoviesActeurs
+import com.example.my_application1.ui.Model.SerieCreditsResult
 import com.example.my_application1.ui.Model.Series
 import com.example.my_application1.ui.Model.TmdbMovieResult
 import retrofit2.http.GET
@@ -32,6 +33,8 @@ interface Tmdbapi{
     suspend fun getSerieParMotsCle(@Query("query") keyWord: String, @Query("api_key") api_key: String) : Series
     @GET("tv/{id}")
     suspend fun selectOfSerie(@Path("id") id: Int, @Query("api_key") api_key: String): DetailedSerie
+    @GET("tv/{id}/credits")
+    suspend fun acteurseries(@Path("id") id: Int, @Query("api_key") api_Key: String): SerieCreditsResult
 
     //Actors
     @GET("trending/person/week")

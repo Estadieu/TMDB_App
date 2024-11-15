@@ -64,8 +64,6 @@ data class Serie(
 data class Actors(
     val page: Int,
     val results: List<Actor>,
-    val total_pages: Int,
-    val total_results: Int
 )
 
 data class Actor(
@@ -192,6 +190,12 @@ data class MovieCreditsResult(
     val id: Int
 )
 
+data class SerieCreditsResult(
+    val cast: List<CastSerie>,
+    val crew: List<CrewSerie>,
+    val id: Int
+)
+
 data class Crew(
     val adult: Boolean,
     val credit_id: String,
@@ -206,7 +210,33 @@ data class Crew(
     val profile_path: String
 )
 
+data class CastSerie(
+    val adult: Boolean,
+    val character: String,
+    val credit_id: String,
+    val gender: Int,
+    val id: Int,
+    val known_for_department: String,
+    val name: String,
+    val order: Int,
+    val original_name: String,
+    val popularity: Double,
+    val profile_path: String
+)
 
+data class CrewSerie(
+    val adult: Boolean,
+    val credit_id: String,
+    val department: String,
+    val gender: Int,
+    val id: Int,
+    val job: String,
+    val known_for_department: String,
+    val name: String,
+    val original_name: String,
+    val popularity: Double,
+    val profile_path: String
+)
 
 data class MoviesActeurs(
     val adult: Boolean,
