@@ -1,5 +1,4 @@
 package com.example.my_application1.ui.Film
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -13,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -29,12 +27,7 @@ import com.example.my_application1.ui.theme.PurpleGrey80
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color.Companion.DarkGray
-import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.platform.LocalContext
-import coil.request.ImageRequest
-import coil.transform.CircleCropTransformation
-import com.example.my_application1.ui.theme.Pink40
+
 
 @Composable
 fun FilmSelected(
@@ -127,9 +120,9 @@ fun FilmSelected(
                     ) {
                         // Récupération des dimensions de l'écran
                         val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-                        val rowWidth = screenWidth * 1.2f // La Row occupe 90% de la largeur de l'écran
-                        val imageWidth = rowWidth * 0.6f // L'image occupe 40% de la largeur de la Row
-                        val detailsWidth = rowWidth * 0.3f // Les détails occupent 50% de la largeur de la Row
+                        val rowWidth = screenWidth * 1.2f // La Row occupe
+                        val imageWidth = rowWidth * 0.6f // L'image occupe 60% de la largeur de la Row
+                        val detailsWidth = rowWidth * 0.3f // Les détails occupent 30% de la largeur de la Row
 
                         // Image avec bordures arrondies et taille dynamique
                         AsyncImage(

@@ -24,6 +24,7 @@ import androidx.navigation.NavController
 import androidx.window.core.layout.WindowWidthSizeClass
 import androidx.window.core.layout.WindowSizeClass
 import com.example.my_application1.FilmsScreendest
+import com.example.my_application1.ui.theme.PurpleGrey40
 
 @Composable
 fun ResponsiveHomeScreen(navController: NavController, windowClass: WindowSizeClass , onStartClicked: () -> Unit) {
@@ -101,14 +102,15 @@ fun ProfileInfo(maxWidth: WindowWidthSizeClass) {
             text = "Jean Estadieu",
             style = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.Bold,
-                fontSize = calculateResponsiveTextSize(maxWidth, 24.sp)
+                fontSize = calculateResponsiveTextSize(maxWidth, 24.sp),
+                color = PurpleGrey40
             )
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "Étudiant ingénieur ISIS",
-            style = MaterialTheme.typography.bodySmall.copy(
-                fontSize = calculateResponsiveTextSize(maxWidth, 16.sp)
+            style = MaterialTheme.typography.bodySmall.copy(fontSize = calculateResponsiveTextSize(maxWidth, 16.sp),
+                color = PurpleGrey40
             )
         )
     }
@@ -128,7 +130,7 @@ fun ContactInfo() {
                 modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "jean.estadieu@orange.fr")
+            Text(text = "jean.estadieu@orange.fr", color = PurpleGrey40)
         }
 
         Row(
@@ -147,7 +149,7 @@ fun ContactInfo() {
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Jean Estadieu",
+                text = "Linkedin : Jean Estadieu",
                 color = MaterialTheme.colorScheme.primary,
             )
         }
@@ -156,10 +158,14 @@ fun ContactInfo() {
 
 @Composable
 fun ActionButton(onStartClicked: () -> Unit) {
-    Button(onClick = {
-        onStartClicked()
-    })
-    {
+    Button(
+        onClick = { onStartClicked() },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = PurpleGrey40,
+            contentColor = MaterialTheme.colorScheme.onSecondary
+        ),
+        modifier = Modifier.padding(horizontal = 20.dp)
+    ) {
         Text(text = "Démarrer")
     }
 }
