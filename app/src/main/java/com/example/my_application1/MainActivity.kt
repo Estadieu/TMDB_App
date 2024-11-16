@@ -3,14 +3,17 @@ package com.example.my_application1
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.DrawerDefaults.backgroundColor
 import androidx.compose.material.Icon
 import androidx.compose.material.NavigationRail
 import androidx.compose.material.NavigationRailItem
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlayArrow
@@ -37,6 +40,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.my_application1.ui.Film.FilmSelected
 import com.example.my_application1.ui.Home.ResponsiveHomeScreen
@@ -85,6 +89,10 @@ fun MyApp(navController: NavHostController) {
     val modelActors: MainViewModel = viewModel()
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     var isNavigationBarVisible by remember { mutableStateOf(false) }
+    val navigationBackgroundColor = PurpleGrey40
+    val selectedContentColor = Color.Black
+    val unselectedContentColor = Color.White
+
 
     if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
         Scaffold(
@@ -93,7 +101,7 @@ fun MyApp(navController: NavHostController) {
 
                 BottomNavigation(
                     backgroundColor = PurpleGrey40,
-                    contentColor = Color.White // Couleur par défaut des icônes
+                    contentColor = Color.White
                 ) {
                     BottomNavigationItem(
                         icon = { Icon(Icons.Filled.Person, contentDescription = "Profil") },
@@ -113,8 +121,8 @@ fun MyApp(navController: NavHostController) {
                             it.hasRoute<FilmsScreendest>()
                         } == true,
                         onClick = { navController.navigate(FilmsScreendest()) },
-                        selectedContentColor = Color.Black, // Couleur des icônes et texte sélectionnés
-                        unselectedContentColor = Color.White // Couleur des icônes et texte non sélectionnés
+                        selectedContentColor = Color.Black,
+                        unselectedContentColor = Color.White
                     )
                     BottomNavigationItem(
                         icon = { Icon(Icons.Filled.Star, contentDescription = "Séries") },
@@ -167,11 +175,17 @@ fun MyApp(navController: NavHostController) {
     } else {
         Scaffold(
             content = { innerPadding ->
-                Row(Modifier.padding(innerPadding)) {
-                    NavigationRail {
+                Row(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .background(PurpleGrey80)
+                ) {
+                    NavigationRail(
+                        modifier = Modifier.background(PurpleGrey40) // Fond de la barre de navigation
+                    ) {
                         NavigationRailItem(
-                            icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "Profil") },
-                            label = { Text("Profil", color = Color.White) },
+                            icon = { Icon(Icons.Filled.Person, contentDescription = "Profil") },
+                            label = { Text("Profil", color = unselectedContentColor) },
                             selected = currentDestination?.hierarchy?.any {
                                 it.hasRoute<Profildest>()
                             } == true,
@@ -180,59 +194,48 @@ fun MyApp(navController: NavHostController) {
 
                         NavigationRailItem(
                             icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "Films") },
-                            label = { Text("Films", color = Color.White) },
+                            label = { Text("Films", color = unselectedContentColor) },
                             selected = currentDestination?.hierarchy?.any {
                                 it.hasRoute<FilmsScreendest>()
                             } == true,
                             onClick = { navController.navigate(FilmsScreendest()) }
                         )
+
                         NavigationRailItem(
                             icon = { Icon(Icons.Filled.Star, contentDescription = "Séries") },
-                            label = { Text("Séries", color = Color.White) },
+                            label = { Text("Séries", color = unselectedContentColor) },
                             selected = currentDestination?.hierarchy?.any {
                                 it.hasRoute<SeriesScreendest>()
                             } == true,
                             onClick = { navController.navigate(SeriesScreendest()) }
                         )
+
                         NavigationRailItem(
-                            icon = { Icon(Icons.Filled.Person, contentDescription = "Acteurs") },
-                            label = { Text("Acteurs", color = Color.White) },
+                            icon = { Icon(Icons.Filled.AccountBox, contentDescription = "Acteurs") },
+                            label = { Text("Acteurs", color = unselectedContentColor) },
                             selected = currentDestination?.hierarchy?.any {
                                 it.hasRoute<ActorsScreendest>()
                             } == true,
                             onClick = { navController.navigate(ActorsScreendest()) }
                         )
                     }
+
                     NavHost(
                         navController = navController,
                         startDestination = FilmsScreendest(),
                         Modifier.padding(innerPadding)
                     ) {
                         composable<FilmsScreendest> {
-                            FilmsScreen(
-                                navController,
-                                modelFilm,
-                                windowSizeClass
-                            )
+                            FilmsScreen(navController, modelFilm, windowSizeClass)
                         }
                         composable<Profildest> {
-                            ResponsiveHomeScreen(navController,windowSizeClass, onStartClicked = { navController.navigate(FilmsScreendest()) } )
+                            ResponsiveHomeScreen(navController, windowSizeClass) { navController.navigate(FilmsScreendest()) }
                         }
-
-
                         composable<SeriesScreendest> {
-                            SeriesScreen(
-                                navController,
-                                modelSeries,
-                                windowSizeClass
-                            )
+                            SeriesScreen(navController, modelSeries, windowSizeClass)
                         }
                         composable<ActorsScreendest> {
-                            ActorsScreen(
-                                navController,
-                                modelActors,
-                                windowSizeClass
-                            )
+                            ActorsScreen(navController, modelActors, windowSizeClass)
                         }
                         composable("film_details/{movieDetails}") { backStackEntry ->
                             val movieDetailsJson = backStackEntry.arguments?.getString("movieDetails")

@@ -158,7 +158,8 @@ fun ContactInfo() {
 fun ActionButton(onStartClicked: () -> Unit) {
     Button(onClick = {
         onStartClicked()
-    }) {
+    })
+    {
         Text(text = "Démarrer")
     }
 }
