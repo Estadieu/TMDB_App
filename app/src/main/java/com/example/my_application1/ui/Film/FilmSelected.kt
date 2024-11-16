@@ -1,7 +1,10 @@
 package com.example.my_application1.ui.Film
+
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,154 +27,206 @@ import com.example.my_application1.ui.Model.MainViewModel
 import com.example.my_application1.ui.theme.PurpleGrey40
 import com.example.my_application1.ui.theme.PurpleGrey80
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
+import com.example.my_application1.ui.theme.Pink40
 
-//Affiche un Film select
 @Composable
-fun FilmSelected(navController: NavController, viewModel: MainViewModel, id: Int, windowClass: WindowSizeClass) {
+fun FilmSelected(
+    navController: NavController,
+    viewModel: MainViewModel,
+    id: Int,
+    windowClass: WindowSizeClass
+) {
     val filmSelected = viewModel.movies_select.collectAsState()
     val movieActeurs by viewModel.movieCast.collectAsState()
 
-    //Lancement
+    // Lancement
     LaunchedEffect(id) {
         viewModel.selectedMovies(id)
         viewModel.getActeurMovie(id)
     }
-    val backgroundColor = PurpleGrey80
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(backgroundColor)) {
-        val isCompactScreen = LocalConfiguration.current.screenWidthDp < 600
+
+    val isCompactScreen = LocalConfiguration.current.screenWidthDp < 600
+    val contentPadding = if (isCompactScreen) 16.dp else 32.dp
+    val fontSizeTitle = if (isCompactScreen) 24.sp else 32.sp
+    val gridColumns = if (isCompactScreen) 2 else 4
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(PurpleGrey80)
+            .padding(contentPadding)
+    ) {
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Titre du film
             item {
                 Text(
                     text = filmSelected.value.original_title,
                     fontWeight = FontWeight.Bold,
-                    fontSize = if (isCompactScreen) 24.sp else 32.sp,
+                    fontSize = fontSizeTitle,
                     fontFamily = FontFamily.Serif,
-                    color = Color.DarkGray
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-
-                AsyncImage(
-                    model = "https://image.tmdb.org/t/p/w500/" + filmSelected.value.backdrop_path,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .shadow(elevation = 20.dp) // Ombre avec élévation
-                )
-
-                Text(
-                    text = filmSelected.value.release_date,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 18.sp,
-                    fontFamily = FontFamily.SansSerif,
-                    color = Color.Gray
+                    color = PurpleGrey40,
+                    textAlign = TextAlign.Center
                 )
             }
 
-            // Utilisation de LazyHorizontalGrid pour afficher les détails en grille
+            // Image et grille des détails (adaptatif)
             item {
-                val detailsList = listOf(
-                    "Language: ${filmSelected.value.original_language}",
-                    "Popularity: ${filmSelected.value.popularity}",
-                    "Vote: ${filmSelected.value.vote_count}",
-                    "Budget: ${filmSelected.value.budget}"
-                )
-
-                LazyHorizontalGrid(
-                    rows = GridCells.Fixed(2),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    items(detailsList) { detail ->
-                        FilmDetailRow(detail = detail)
-                    }
-                }
-            }
-
-            item {
-                Text(
-                    text = "Synopsis:",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    fontFamily = FontFamily.Serif,
-                    color = Color.DarkGray
-                )
-
-                Text(
-                    text = filmSelected.value.overview,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 16.sp,
-                    fontFamily = FontFamily.SansSerif,
-                    textAlign = TextAlign.Justify
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Affichage des acteurs
-                Text(
-                    fontSize = 20.sp,
-                    text = "Acteurs principaux du film",
-                    fontFamily = FontFamily.SansSerif,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
-
-                //Affiche ma liste des acteurs
-                movieActeurs.take(6).chunked(2).forEach { actorPair ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                if (isCompactScreen) {
+                    // Affichage en colonne pour écrans compacts
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        actorPair.forEach { actor ->
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.weight(1f).padding(end = 8.dp)
-                            ) {
-                                val profileUrl =
-                                    "https://image.tmdb.org/t/p/w200${actor.profile_path}"
-                                AsyncImage(
-                                    model = ImageRequest.Builder(LocalContext.current)
-                                        .data(profileUrl)
-                                        .transformations(CircleCropTransformation())
-                                        .build(),
-                                    contentDescription = actor.name,
-                                    modifier = Modifier
-                                        .size(100.dp)
-                                        .padding(end = 8.dp)
-                                )
+                        AsyncImage(
+                            model = "https://image.tmdb.org/t/p/w500/" + filmSelected.value.backdrop_path,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(16f / 9f)
+                                .clip(RoundedCornerShape(8.dp))
+                                .shadow(elevation = 12.dp)
+                        )
 
-                                //Nom de l'acteur
-                                Text(
-                                    text = actor.name,
-                                    fontWeight = FontWeight.SemiBold,
-                                    fontFamily = FontFamily.SansSerif
-
-                                    )
+                        LazyHorizontalGrid(
+                            rows = GridCells.Fixed(gridColumns),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(80.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            val detailsList = listOf(
+                                "LANGUE: ${filmSelected.value.original_language}",
+                                "POPULARITE: ${filmSelected.value.popularity}",
+                                "VOTE: ${filmSelected.value.vote_count}",
+                                "BUDGET: ${filmSelected.value.budget}"
+                            )
+                            items(detailsList) { detail ->
+                                FilmDetailRow(detail = detail)
                             }
                         }
-                        // Ajouter un espace si la paire n'a qu'un acteur pour équilibrer
-                        if (actorPair.size == 1) {
-                            Spacer(modifier = Modifier.weight(1f))
+                    }
+                } else {
+                    // Affichage côte à côte pour écrans larges
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+
+                    ) {
+                        // Récupération des dimensions de l'écran
+                        val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+                        val rowWidth = screenWidth * 1.2f // La Row occupe 90% de la largeur de l'écran
+                        val imageWidth = rowWidth * 0.6f // L'image occupe 40% de la largeur de la Row
+                        val detailsWidth = rowWidth * 0.3f // Les détails occupent 50% de la largeur de la Row
+
+                        // Image avec bordures arrondies et taille dynamique
+                        AsyncImage(
+                            model = "https://image.tmdb.org/t/p/w300/" + filmSelected.value.backdrop_path,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .width(imageWidth/1.9f)
+                                .aspectRatio(4f / 3f) // Aspect ratio constant
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(PurpleGrey40)
+                                .border(5.dp, PurpleGrey40, RoundedCornerShape(10.dp))
+                        )
+
+                        // Section des détails du film
+                        Column(
+                            modifier = Modifier
+                                .width(detailsWidth)
+                                .padding(0.dp),
+                            verticalArrangement = Arrangement.spacedBy(20.dp)
+                        ) {
+                            val detailsList = listOf(
+                                "LANGUE: ${filmSelected.value.original_language}",
+                                "POPULARITÉ: ${filmSelected.value.popularity}",
+                                "VOTE: ${filmSelected.value.vote_count}",
+                                "BUDGET: ${filmSelected.value.budget}"
+                            )
+                            detailsList.forEach { detail ->
+                                Text(
+                                    text = detail,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = PurpleGrey80,
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(12.dp))
+                                        .background(PurpleGrey40)
+                                        .fillMaxWidth(),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(100.dp))
+            }
+
+            // Synopsis
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = "Synopsis",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        color = PurpleGrey40,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = filmSelected.value.overview,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 17.sp,
+                        color = PurpleGrey40,
+                        textAlign = TextAlign.Justify
+                    )
+                }
+            }
+
+            // Acteurs principaux
+            item {
+                Text(
+                    text = "Acteurs principaux",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = PurpleGrey40,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    items(movieActeurs) { actor ->
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.width(120.dp)
+                        ) {
+                            AsyncImage(
+                                model = "https://image.tmdb.org/t/p/w200${actor.profile_path}",
+                                contentDescription = actor.name,
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .clip(RoundedCornerShape(40.dp))
+                                    .background(PurpleGrey40)
+                            )
+                            Text(
+                                text = actor.name,
+                                fontSize = 14.sp,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(top = 4.dp),
+                                color = PurpleGrey40
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -181,15 +236,12 @@ fun FilmSelected(navController: NavController, viewModel: MainViewModel, id: Int
 fun FilmDetailRow(detail: String) {
     Text(
         text = detail,
-        fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        fontFamily = FontFamily.SansSerif,
-        color = Color.White,
+        fontWeight = FontWeight.Bold,
+        color = PurpleGrey40,
         modifier = Modifier
+
             .fillMaxWidth()
-            .padding(6.dp)
-            .clip(RoundedCornerShape(4.dp))
-            .background(PurpleGrey40)
-            .padding(6.dp)
+            .clip(RoundedCornerShape(3.dp))
     )
 }
