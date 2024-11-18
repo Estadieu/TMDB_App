@@ -22,6 +22,7 @@ import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
+import com.example.my_application1.R
 import com.example.my_application1.ui.Model.Actor
 import com.example.my_application1.ui.Model.MainViewModel
 import com.example.my_application1.ui.theme.PurpleGrey40
@@ -92,6 +93,7 @@ fun ActorItem(actor: Actor, windowClass: WindowSizeClass) {
     val textHeightFraction = 0.1f // Le texte prend 10% de la hauteur
     // Couleur
     val backgroundColor = PurpleGrey40 // Violet par défaut
+
     // Utilisation d'une Card pour encapsuler le contenu d'un acteur
     Card(
         modifier = Modifier
@@ -109,16 +111,17 @@ fun ActorItem(actor: Actor, windowClass: WindowSizeClass) {
         ) {
             // Image de l'acteur ajustée proportionnellement à la hauteur de l'écran
             AsyncImage(
-                model = "https://image.tmdb.org/t/p/w400${actor.profile_path}",
-                contentDescription = actor.name,
+                model = actor.profile_path?.let { "https://image.tmdb.org/t/p/w400$it" }
+                    ?: R.drawable.ic_default_profile, // Image par défaut si `profile_path` est null
+                contentDescription = actor.name ?: "Pas de nom",
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(imageHeightFraction) // Hauteur proportionnelle à l'écran
             )
 
-            // Nom de l'acteur
+            // Nom de l'acteur ou "Pas de nom" si le champ est vide
             Text(
-                text = actor.name,
+                text = actor.name ?: "Pas de nom",
                 fontSize = 14.sp,
                 color = Color.White,
                 modifier = Modifier
@@ -126,8 +129,9 @@ fun ActorItem(actor: Actor, windowClass: WindowSizeClass) {
                     .fillMaxHeight(textHeightFraction) // Hauteur proportionnelle pour le texte
             )
 
+            // Département connu
             Text(
-                text = actor.known_for_department,
+                text = actor.known_for_department ?: "",
                 fontSize = 12.sp,
                 color = Color.White.copy(alpha = 0.7f),
                 modifier = Modifier
