@@ -50,6 +50,7 @@ fun FilmsScreen(navController: NavController, viewModel: MainViewModel, windowCl
                 .padding(16.dp)
         )
 
+        //Permet de s'adapter à la taille de mon écran
         val columns = when (windowClass.windowWidthSizeClass) {
             WindowWidthSizeClass.COMPACT -> 2
             WindowWidthSizeClass.MEDIUM -> 3
@@ -67,7 +68,7 @@ fun FilmsScreen(navController: NavController, viewModel: MainViewModel, windowCl
         ) {
             items(movies) { movie ->
                 MovieItem(movie = movie, windowClass = windowClass) {
-                    // Naviguer
+                    // Permet de naviguer avec version du cours
                     navController.navigate(FilmDetailsDest(movie.id))
                 }
             }
@@ -86,7 +87,7 @@ fun MovieItem(movie: TmdbMovie, windowClass: WindowSizeClass, onClick: () -> Uni
 
     val textHeightFraction = 0.1f
     val backgroundColor = PurpleGrey40
-
+    //Affichage de mes Card
     Card(
         modifier = Modifier
             .padding(8.dp)

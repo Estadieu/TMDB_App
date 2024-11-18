@@ -27,6 +27,8 @@ import com.example.my_application1.FilmsScreendest
 import com.example.my_application1.ui.theme.PurpleGrey40
 import com.example.my_application1.ui.theme.PurpleGrey80
 
+
+//Page de profil qui s'adapte à la taille de mon écran
 @Composable
 fun ResponsiveHomeScreen(navController: NavController, windowClass: WindowSizeClass , onStartClicked: () -> Unit) {
     when (windowClass.windowWidthSizeClass) {
@@ -94,6 +96,7 @@ fun ProfileImage(maxWidth: WindowWidthSizeClass) {
     )
 }
 
+//Affiche les informations de mon profil
 @Composable
 fun ProfileInfo(maxWidth: WindowWidthSizeClass) {
     Column(
@@ -117,6 +120,7 @@ fun ProfileInfo(maxWidth: WindowWidthSizeClass) {
     }
 }
 
+//Affiche mes informations de contact
 @Composable
 fun ContactInfo() {
     val context = LocalContext.current
@@ -157,6 +161,7 @@ fun ContactInfo() {
     }
 }
 
+//Bouton d'action pour démarer l'application -> accèes aux autres pages!
 @Composable
 fun ActionButton(onStartClicked: () -> Unit) {
     Button(
@@ -171,6 +176,7 @@ fun ActionButton(onStartClicked: () -> Unit) {
     }
 }
 
+//
 @Composable
 fun calculateResponsiveSize(windowWidthSizeClass: WindowWidthSizeClass, baseSize: Dp): Dp {
     return when (windowWidthSizeClass) {
@@ -180,7 +186,6 @@ fun calculateResponsiveSize(windowWidthSizeClass: WindowWidthSizeClass, baseSize
         else -> baseSize
     }
 }
-
 @Composable
 fun calculateResponsiveTextSize(windowWidthSizeClass: WindowWidthSizeClass, baseSize: TextUnit): TextUnit {
     return when (windowWidthSizeClass) {

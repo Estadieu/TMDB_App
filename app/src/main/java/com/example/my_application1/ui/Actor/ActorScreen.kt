@@ -32,13 +32,14 @@ fun ActorsScreen(navController: NavController, viewModel: MainViewModel, windowC
     // Récupérer l'état des acteurs à partir du ViewModel
     val actorsState = viewModel.actors.collectAsState()
     val actors = actorsState.value
+
     // Etat pour stocker le mot-clé
     var searchQuery by remember { mutableStateOf("") }
-
     // Déclencher la recherche (Si pas de mot clé -> acteurs populaires, voir code searchActors)
     LaunchedEffect(Unit) {
         viewModel.searchActors("")
     }
+
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -93,7 +94,6 @@ fun ActorItem(actor: Actor, windowClass: WindowSizeClass) {
     val textHeightFraction = 0.1f // Le texte prend 10% de la hauteur
     // Couleur
     val backgroundColor = PurpleGrey40 // Violet par défaut
-
     // Utilisation d'une Card pour encapsuler le contenu d'un acteur
     Card(
         modifier = Modifier
@@ -112,7 +112,7 @@ fun ActorItem(actor: Actor, windowClass: WindowSizeClass) {
             // Image de l'acteur ajustée proportionnellement à la hauteur de l'écran
             AsyncImage(
                 model = actor.profile_path?.let { "https://image.tmdb.org/t/p/w400$it" }
-                    ?: R.drawable.ic_default_profile, // Image par défaut si `profile_path` est null
+                    ?: R.drawable.ic_default_profile, // Image par défaut si `profile_path` est null (Permet de rectifier le bug sur les acteurs)
                 contentDescription = actor.name ?: "Pas de nom",
                 modifier = Modifier
                     .fillMaxWidth()
