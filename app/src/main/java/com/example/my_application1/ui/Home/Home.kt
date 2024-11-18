@@ -25,6 +25,7 @@ import androidx.window.core.layout.WindowWidthSizeClass
 import androidx.window.core.layout.WindowSizeClass
 import com.example.my_application1.FilmsScreendest
 import com.example.my_application1.ui.theme.PurpleGrey40
+import com.example.my_application1.ui.theme.PurpleGrey80
 
 @Composable
 fun ResponsiveHomeScreen(navController: NavController, windowClass: WindowSizeClass , onStartClicked: () -> Unit) {
@@ -166,7 +167,7 @@ fun ActionButton(onStartClicked: () -> Unit) {
         ),
         modifier = Modifier.padding(horizontal = 20.dp)
     ) {
-        Text(text = "Démarrer")
+        Text(text = "Démarrer", color = PurpleGrey80)
     }
 }
 

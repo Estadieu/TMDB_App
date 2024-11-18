@@ -41,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.navigation.toRoute
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.my_application1.ui.Film.FilmSelected
 import com.example.my_application1.ui.Home.ResponsiveHomeScreen
@@ -89,10 +90,7 @@ fun MyApp(navController: NavHostController) {
     val modelActors: MainViewModel = viewModel()
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     var isNavigationBarVisible by remember { mutableStateOf(false) }
-    val navigationBackgroundColor = PurpleGrey40
-    val selectedContentColor = Color.Black
     val unselectedContentColor = Color.White
-
 
     if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
         Scaffold(
@@ -156,20 +154,8 @@ fun MyApp(navController: NavHostController) {
                 composable<FilmsScreendest> { FilmsScreen(navController, modelFilm, windowSizeClass) }
                 composable<SeriesScreendest> { SeriesScreen(navController, modelSeries, windowSizeClass) }
                 composable<ActorsScreendest> { ActorsScreen(navController, modelActors, windowSizeClass) }
-                composable("film_details/{movieDetails}") { backStackEntry ->
-                    val movieDetailsJson = backStackEntry.arguments?.getString("movieDetails")
-                    movieDetailsJson?.let {
-                        val movieDetails = Json.decodeFromString<FilmDetailsDest>(it)
-                        FilmSelected(navController, modelFilm, movieDetails.movieId, windowSizeClass)
-                    }
-                }
-                composable("series_details/{seriesDetails}") { backStackEntry ->
-                    val seriesDetailsJson = backStackEntry.arguments?.getString("seriesDetails")
-                    seriesDetailsJson?.let {
-                        val seriesDetails = Json.decodeFromString<SeriesDetailsDest>(it)
-                        SeriesSelected(navController, modelSeries, seriesDetails.seriesId, windowSizeClass)
-                    }
-                }
+                composable<FilmDetailsDest> { backStackEntry -> val movieDetails : FilmDetailsDest= backStackEntry.toRoute();FilmSelected(navController, modelFilm, movieDetails.movieId, windowSizeClass) }
+                composable<SeriesDetailsDest> { backStackEntry -> val seriesDetails : SeriesDetailsDest = backStackEntry.toRoute();SeriesSelected(navController, modelSeries, seriesDetails.seriesId, windowSizeClass) }
             }
         }
     } else {
@@ -225,32 +211,12 @@ fun MyApp(navController: NavHostController) {
                         startDestination = FilmsScreendest(),
                         Modifier.padding(innerPadding)
                     ) {
-                        composable<FilmsScreendest> {
-                            FilmsScreen(navController, modelFilm, windowSizeClass)
-                        }
-                        composable<Profildest> {
-                            ResponsiveHomeScreen(navController, windowSizeClass) { navController.navigate(FilmsScreendest()) }
-                        }
-                        composable<SeriesScreendest> {
-                            SeriesScreen(navController, modelSeries, windowSizeClass)
-                        }
-                        composable<ActorsScreendest> {
-                            ActorsScreen(navController, modelActors, windowSizeClass)
-                        }
-                        composable("film_details/{movieDetails}") { backStackEntry ->
-                            val movieDetailsJson = backStackEntry.arguments?.getString("movieDetails")
-                            movieDetailsJson?.let {
-                                val movieDetails = Json.decodeFromString<FilmDetailsDest>(it)
-                                FilmSelected(navController, modelFilm, movieDetails.movieId, windowSizeClass)
-                            }
-                        }
-                        composable("series_details/{seriesDetails}") { backStackEntry ->
-                            val seriesDetailsJson = backStackEntry.arguments?.getString("seriesDetails")
-                            seriesDetailsJson?.let {
-                                val seriesDetails = Json.decodeFromString<SeriesDetailsDest>(it)
-                                SeriesSelected(navController, modelSeries, seriesDetails.seriesId, windowSizeClass)
-                            }
-                        }
+                        composable<FilmsScreendest> { FilmsScreen(navController, modelFilm, windowSizeClass) }
+                        composable<Profildest> { ResponsiveHomeScreen(navController, windowSizeClass) { navController.navigate(FilmsScreendest()) } }
+                        composable<SeriesScreendest> { SeriesScreen(navController, modelSeries, windowSizeClass) }
+                        composable<ActorsScreendest> { ActorsScreen(navController, modelActors, windowSizeClass) }
+                        composable<FilmDetailsDest> { backStackEntry -> val movieDetails : FilmDetailsDest= backStackEntry.toRoute();FilmSelected(navController, modelFilm, movieDetails.movieId, windowSizeClass) }
+                        composable<SeriesDetailsDest> { backStackEntry -> val seriesDetails : SeriesDetailsDest = backStackEntry.toRoute();SeriesSelected(navController, modelSeries, seriesDetails.seriesId, windowSizeClass) }
                     }
                 }
             }

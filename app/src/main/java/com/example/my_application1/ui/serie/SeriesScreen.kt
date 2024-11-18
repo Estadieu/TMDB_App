@@ -20,6 +20,7 @@ import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
+import com.example.my_application1.FilmDetailsDest
 import com.example.my_application1.SeriesDetailsDest
 import com.example.my_application1.ui.Model.MainViewModel
 import com.example.my_application1.ui.Model.Serie
@@ -69,8 +70,7 @@ fun SeriesScreen(navController: NavController, viewModel: MainViewModel, windowC
         ) {
             items(series) { serie ->
                 SerieItem(serie = serie, windowClass = windowClass) {
-                    val seriesDetailsJson = Json.encodeToString(SeriesDetailsDest(serie.id))
-                    navController.navigate("series_details/$seriesDetailsJson")
+                    navController.navigate(SeriesDetailsDest(serie.id))
                 }
             }
         }
