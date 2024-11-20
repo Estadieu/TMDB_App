@@ -76,6 +76,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             // Appliquer le thème
+            //Test Clone Git (Avec autres PC)
             My_Application1Theme {
                 val navController = rememberNavController()
                 MyApp(navController)
