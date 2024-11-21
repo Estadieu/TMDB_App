@@ -4,6 +4,7 @@ plugins {
     kotlin("plugin.serialization") version "1.9.25"
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("androidx.room")
 }
 android {
     namespace = "com.example.my_application1"
@@ -20,8 +21,12 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-    }
 
+
+    }
+    room{
+        schemaDirectory("$projectDir/schemas")
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -52,6 +57,9 @@ android {
 }
 
 dependencies {
+
+    val room = "2.6.1"
+    val hilt = "2.51.1"
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -74,15 +82,13 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.52")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
-    //HILT
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-    implementation(libs.hilt.navigation.compose)
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("com.google.dagger:hilt-android:$hilt")
+    implementation("androidx.room:room-runtime:$room")
 
-    // Room
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    kapt(libs.room.compiler)
+    kapt("androidx.room:room-compiler:$room")
+    kapt("com.google.dagger:hilt-android-compiler:$hilt")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

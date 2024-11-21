@@ -1,5 +1,6 @@
 package com.example.my_application1
 
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -51,6 +52,8 @@ import com.example.my_application1.ui.theme.My_Application1Theme
 import com.example.my_application1.ui.theme.Pink80
 import com.example.my_application1.ui.theme.PurpleGrey40
 import com.example.my_application1.ui.theme.PurpleGrey80
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.HiltAndroidApp
 import kotlinx.serialization.json.Json
 
 @Serializable
@@ -71,6 +74,16 @@ class FilmDetailsDest(val movieId: Int)
 @Serializable
 class SeriesDetailsDest(val seriesId: Int)
 
+//HILT
+@HiltAndroidApp
+class MyApplication: Application()
+
+class Repository(tmdbapi: Tmdbapi) {
+    suspend fun lastMovies() = tmdbapi.lastmovies().results
+}
+
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -243,3 +256,4 @@ fun MyApp(navController: NavHostController) {
         )
 }
 }
+
