@@ -19,8 +19,6 @@ class MainViewModel : ViewModel() {
     val movieCast = MutableStateFlow<List<Cast>>(emptyList())
     val seriesCast = MutableStateFlow<List<CastSerie>>(emptyList())
     val api_key = "a6f34ffd317094fe364b44e6dbd6d5bc"
-
-
     val intercepter = HttpLoggingInterceptor().apply {
         this.level = HttpLoggingInterceptor.Level.BODY
     }
