@@ -15,6 +15,7 @@ import androidx.compose.material.NavigationRailItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
@@ -44,6 +45,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.toRoute
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.example.my_application1.ui.Collection
 import com.example.my_application1.ui.Film.FilmSelected
 import com.example.my_application1.ui.Home.ResponsiveHomeScreen
 import com.example.my_application1.ui.serie.SeriesSelected
@@ -70,6 +72,9 @@ class FilmDetailsDest(val movieId: Int)
 
 @Serializable
 class SeriesDetailsDest(val seriesId: Int)
+
+@Serializable
+class CollectionDest
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -147,6 +152,17 @@ fun MyApp(navController: NavHostController) {
                             selectedContentColor =Pink80,
                             unselectedContentColor = Color.White
                         )
+
+                        BottomNavigationItem(
+                            icon = { Icon(Icons.Filled.AddCircle, contentDescription = "Collection") },
+                            label = { Text("Collection", color = Color.White) },
+                            selected = currentDestination?.hierarchy?.any {
+                                it.hasRoute<CollectionDest>()
+                            } == true,
+                            onClick = { navController.navigate(CollectionDest()) },
+                            selectedContentColor =Pink80,
+                            unselectedContentColor = Color.White
+                        )
                     }
                 }
             }
@@ -160,6 +176,8 @@ fun MyApp(navController: NavHostController) {
                 composable<FilmsScreendest> { FilmsScreen(navController, modelFilm, windowSizeClass) }
                 composable<SeriesScreendest> { SeriesScreen(navController, modelSeries, windowSizeClass) }
                 composable<ActorsScreendest> { ActorsScreen(navController, modelActors, windowSizeClass) }
+                //Ajout de la collection pour la nav
+                composable<CollectionDest> { Collection(navController) }
                 composable<FilmDetailsDest> { backStackEntry ->
                     val movieDetails: FilmDetailsDest = backStackEntry.toRoute()
                     FilmSelected(navController, modelFilm, movieDetails.movieId, windowSizeClass)
@@ -217,6 +235,15 @@ fun MyApp(navController: NavHostController) {
                                 } == true,
                                 onClick = { navController.navigate(ActorsScreendest()) }
                             )
+                            NavigationRailItem(
+                                icon = { Icon(Icons.Filled.AddCircle, contentDescription = "Collection") },
+                                label = { Text("Collection", color = unselectedContentColor) },
+                                selected = currentDestination?.hierarchy?.any {
+                                    it.hasRoute<CollectionDest>()
+                                } == true,
+                                onClick = { navController.navigate(CollectionDest()) }
+                            )
+
                         }
                     }
 
@@ -229,6 +256,7 @@ fun MyApp(navController: NavHostController) {
                         composable<Profildest> { ResponsiveHomeScreen(navController, windowSizeClass) { navController.navigate(FilmsScreendest()) } }
                         composable<SeriesScreendest> { SeriesScreen(navController, modelSeries, windowSizeClass) }
                         composable<ActorsScreendest> { ActorsScreen(navController, modelActors, windowSizeClass) }
+                        composable<CollectionDest> { Collection(navController) }
                         composable<FilmDetailsDest> { backStackEntry ->
                             val movieDetails: FilmDetailsDest = backStackEntry.toRoute()
                             FilmSelected(navController, modelFilm, movieDetails.movieId, windowSizeClass)
