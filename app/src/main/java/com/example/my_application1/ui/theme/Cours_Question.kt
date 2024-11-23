@@ -44,8 +44,11 @@ ViewModel -> Classe pour stocker et stocker données relative a l'interface grap
  @GET("search/{id}") suspend fun methode(@Path("id") id: String, @Query ("langue") langue: String): String
  Quel est l'URL construit par ce code : val api = Retrofit.builder() .baseUrl("https://api.org/ . buil() api.methode("a32", "fr")
  réponse -> https://api.org/search/a32?langue=fr
+
+ Requette pôur l'API : https://api.themoviedb.org/3/search/collection?query=horror&api_key=a6f34ffd317094fe364b44e6dbd6d5bc
  */
  */
+
 
 
 

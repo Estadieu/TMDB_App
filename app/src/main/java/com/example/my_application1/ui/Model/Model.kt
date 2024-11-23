@@ -331,3 +331,4 @@ data class NextEpisodeToAir(
     val vote_average: Double = 0.0,
     val vote_count: Int = 0
 )
+
