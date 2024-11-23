@@ -1,6 +1,7 @@
 package com.example.my_application1.ui.Api
 
 import com.example.my_application1.ui.Model.Actors
+import com.example.my_application1.ui.Model.CollectionResponse
 import com.example.my_application1.ui.Model.DetailedMovie
 import com.example.my_application1.ui.Model.DetailedSerie
 import com.example.my_application1.ui.Model.MovieCreditsResult
@@ -41,4 +42,9 @@ interface Tmdbapi{
     suspend fun lastactorOfWeek(@Query("api_key") api_key: String): Actors
     @GET("search/person")
     suspend fun getActorsParMotsCle(@Query("query") keyWord: String, @Query("api_key") api_key: String) : Actors
+
+    //Pour la collection
+    @GET("search/collection")
+    suspend fun searchCollections(@Query("query") query: String, @Query("api_key") api_Key: String) : CollectionResponse
+    }
 }

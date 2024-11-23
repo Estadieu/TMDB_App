@@ -14,6 +14,7 @@ class MainViewModel : ViewModel() {
     val movies = MutableStateFlow<List<TmdbMovie>>(listOf())
     val series = MutableStateFlow<List<Serie>>(listOf())
     val actors = MutableStateFlow<List<Actor>>(listOf())
+    val collections = MutableStateFlow<List<Result>>(emptyList())
     val movies_select = MutableStateFlow<DetailedMovie>(DetailedMovie())
     val series_select = MutableStateFlow<DetailedSerie>(DetailedSerie())
     val movieCast = MutableStateFlow<List<Cast>>(emptyList())
@@ -104,6 +105,22 @@ class MainViewModel : ViewModel() {
             try {
                 val serieact = service.acteurseries(id, api_key)
                 seriesCast.value = serieact.cast
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    // Pour les collections
+    fun searchCollections(motcle: String) {
+        viewModelScope.launch {
+            try {
+                if (motcle.isBlank()) {
+                    collections.value = emptyList()
+                } else {
+                    val result = service.searchCollections(query = "horror", api_Key = api_key)
+                    collections.value = result.results
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
