@@ -45,6 +45,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.toRoute
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.example.my_application1.ui.Api.Tmdbapi
 import com.example.my_application1.ui.Film.FilmSelected
 import com.example.my_application1.ui.Home.ResponsiveHomeScreen
 import com.example.my_application1.ui.serie.SeriesSelected
@@ -78,9 +79,6 @@ class SeriesDetailsDest(val seriesId: Int)
 @HiltAndroidApp
 class MyApplication: Application()
 
-class Repository(tmdbapi: Tmdbapi) {
-    suspend fun lastMovies() = tmdbapi.lastmovies().results
-}
 
 
 @AndroidEntryPoint

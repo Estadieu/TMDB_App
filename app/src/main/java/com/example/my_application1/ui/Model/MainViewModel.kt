@@ -12,8 +12,10 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
+
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repo: Repository) : ViewModel() {
+    val repo = Repository()
     val movies = MutableStateFlow<List<TmdbMovie>>(listOf())
     val series = MutableStateFlow<List<Serie>>(listOf())
     val actors = MutableStateFlow<List<Actor>>(listOf())
@@ -22,19 +24,10 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
     val movieCast = MutableStateFlow<List<Cast>>(emptyList())
     val seriesCast = MutableStateFlow<List<CastSerie>>(emptyList())
     val api_key = "a6f34ffd317094fe364b44e6dbd6d5bc"
-    val intercepter = HttpLoggingInterceptor().apply {
-        this.level = HttpLoggingInterceptor.Level.BODY
-    }
-    val client = OkHttpClient.Builder().apply {
-        this.addInterceptor(intercepter)
-    }.build()
 
-    val service = Retrofit.Builder()
-        .baseUrl("https://api.themoviedb.org/3/")
-        .addConverterFactory(MoshiConverterFactory.create())
-        .client(client)
-        .build()
-        .create(Tmdbapi::class.java);
+    fun getMovies() {
+        viewModelScope.launch { movies.value = repo.lastMovies() }
+    }
 
     //Pour les Films
     fun searchMovies(motcle: String) {
