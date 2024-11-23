@@ -96,6 +96,7 @@ fun MyApp(navController: NavHostController) {
     val modelFilm: MainViewModel = viewModel()
     val modelSeries: MainViewModel = viewModel()
     val modelActors: MainViewModel = viewModel()
+    val modelCollection: MainViewModel = viewModel()
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     var isNavigationBarVisible by remember { mutableStateOf(false) }
     val unselectedContentColor = Color.White
@@ -177,7 +178,7 @@ fun MyApp(navController: NavHostController) {
                 composable<SeriesScreendest> { SeriesScreen(navController, modelSeries, windowSizeClass) }
                 composable<ActorsScreendest> { ActorsScreen(navController, modelActors, windowSizeClass) }
                 //Ajout de la collection pour la nav
-                composable<CollectionDest> { Collection(navController) }
+                composable<CollectionDest> { Collection(navController,modelCollection,windowSizeClass) }
                 composable<FilmDetailsDest> { backStackEntry ->
                     val movieDetails: FilmDetailsDest = backStackEntry.toRoute()
                     FilmSelected(navController, modelFilm, movieDetails.movieId, windowSizeClass)
@@ -256,7 +257,7 @@ fun MyApp(navController: NavHostController) {
                         composable<Profildest> { ResponsiveHomeScreen(navController, windowSizeClass) { navController.navigate(FilmsScreendest()) } }
                         composable<SeriesScreendest> { SeriesScreen(navController, modelSeries, windowSizeClass) }
                         composable<ActorsScreendest> { ActorsScreen(navController, modelActors, windowSizeClass) }
-                        composable<CollectionDest> { Collection(navController) }
+                        composable<CollectionDest> { Collection(navController, modelCollection, windowSizeClass) }
                         composable<FilmDetailsDest> { backStackEntry ->
                             val movieDetails: FilmDetailsDest = backStackEntry.toRoute()
                             FilmSelected(navController, modelFilm, movieDetails.movieId, windowSizeClass)

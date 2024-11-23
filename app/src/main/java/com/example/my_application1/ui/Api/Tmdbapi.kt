@@ -47,4 +47,4 @@ interface Tmdbapi{
     @GET("search/collection")
     suspend fun searchCollections(@Query("query") query: String, @Query("api_key") api_Key: String) : CollectionResponse
     }
-}
+
