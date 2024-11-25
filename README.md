@@ -22,9 +22,11 @@ Ce dépôt contient plusieurs branches, chacune dédiée à des fonctionnalités
         Comprend des tâches pratiques et des informations pour revoir le cours.
 
     HILT+Room
-        Une branche expérimentale visant à intégrer HILT (injection de dépendances) et Room (base de données locale).
+        Une branche expérimentale visant à intégrer HILT (injection de dépendances) et Room (BDD locale).
         L’objectif est de créer une application fonctionnant aussi bien en ligne qu’hors ligne.
         Remarque : Cette branche est encore en développement et n’est pas entièrement opérationnelle.
+        HILT->OK
+        Room->Pas encore
 
 Fonctionnalités
 
