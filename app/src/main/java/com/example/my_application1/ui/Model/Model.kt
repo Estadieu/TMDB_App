@@ -7,10 +7,8 @@ class Model{
 
 //Pour afficher les Films
 data class TmdbMovieResult(
-    val page: Int,
-    val results: List<TmdbMovie>,
-    val total_pages: Int,
-    val total_results: Int
+    var page: Int = 0,
+    val results: List<TmdbMovie> = listOf()
 )
 
 data class TmdbMovie(

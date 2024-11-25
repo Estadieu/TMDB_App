@@ -42,6 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.toRoute
 import androidx.window.core.layout.WindowWidthSizeClass
@@ -55,6 +56,7 @@ import com.example.my_application1.ui.theme.PurpleGrey40
 import com.example.my_application1.ui.theme.PurpleGrey80
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.serialization.json.Json
 
 @Serializable
@@ -79,8 +81,6 @@ class SeriesDetailsDest(val seriesId: Int)
 @HiltAndroidApp
 class MyApplication: Application()
 
-
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,9 +99,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp(navController: NavHostController) {
     val currentDestination = navController.currentBackStackEntry?.destination
-    val modelFilm: MainViewModel = viewModel()
-    val modelSeries: MainViewModel = viewModel()
-    val modelActors: MainViewModel = viewModel()
+    val modelFilm: MainViewModel = hiltViewModel()
+    val modelSeries: MainViewModel = hiltViewModel()
+    val modelActors: MainViewModel = hiltViewModel()
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     var isNavigationBarVisible by remember { mutableStateOf(false) }
     val unselectedContentColor = Color.White

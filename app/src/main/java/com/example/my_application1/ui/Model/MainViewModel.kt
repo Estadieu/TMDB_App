@@ -4,18 +4,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.my_application1.ui.Api.Tmdbapi
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jakarta.inject.Inject
+
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Inject
 
 
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repo: Repository) : ViewModel() {
-    val repo = Repository()
     val movies = MutableStateFlow<List<TmdbMovie>>(listOf())
     val series = MutableStateFlow<List<Serie>>(listOf())
     val actors = MutableStateFlow<List<Actor>>(listOf())
@@ -23,7 +23,6 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
     val series_select = MutableStateFlow<DetailedSerie>(DetailedSerie())
     val movieCast = MutableStateFlow<List<Cast>>(emptyList())
     val seriesCast = MutableStateFlow<List<CastSerie>>(emptyList())
-    val api_key = "a6f34ffd317094fe364b44e6dbd6d5bc"
 
     fun getMovies() {
         viewModelScope.launch { movies.value = repo.lastMovies() }
@@ -34,10 +33,10 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
         viewModelScope.launch {
             if (motcle.isBlank()) {
                 // Si aucun mot-clé n'est fourni, on affiche les films populaires
-                movies.value = service.lastmoviesOfWeek(api_key).results
+                movies.value = repo.lastMovies()
             } else {
                 // Sinon, on filtre les films par le mot-clé
-                movies.value = service.getFilmParMotsCle(motcle, api_key).results
+                movies.value = repo.searchMoviesByKeyword(motcle)
             }
         }
     }
@@ -47,10 +46,10 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
         viewModelScope.launch {
             if (motcle.isBlank()) {
                 // Si aucun mot-clé n'est fourni, on affiche les series
-                series.value = service.lastserieOfWeek(api_key).results
+                series.value = repo.lastSeries()
             } else {
                 // Sinon, on filtre les series par le mot-clé
-                series.value = service.getSerieParMotsCle(motcle, api_key).results
+                series.value = repo.searchSeriesByKeyword(motcle)
             }
 
         }
@@ -61,10 +60,10 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
         viewModelScope.launch {
             if (motcle.isBlank()) {
                 // Si aucun mot-clé n'est fourni, on affiche les acteurs
-                actors.value = service.lastactorOfWeek(api_key).results
+                actors.value = repo.lastActors()
             } else {
                 // Sinon, on filtre les series par le mot-clé
-                actors.value = service.getActorsParMotsCle(motcle, api_key).results
+                actors.value = repo.searchActorsByKeyword(motcle)
             }
 
         }
@@ -73,12 +72,12 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
     //Pour selection séries et films
     fun selectedMovies(id : Int){
         viewModelScope.launch {
-            movies_select.value = service.selectOfMovie(id,api_key)
+            movies_select.value = repo.selectOfMovie(id)
         }
     }
     fun selectedSeries(id : Int){
         viewModelScope.launch {
-            series_select.value = service.selectOfSerie(id,api_key)
+            series_select.value = repo.selectOfSerie(id)
         }
     }
 
@@ -86,7 +85,7 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
     fun getActeurMovie(id: Int) {
         viewModelScope.launch {
             try {
-                val result = service.acteurfilm(id, api_key)
+                val result = repo.acteurfilm(id)
                 movieCast.value = result.cast
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -96,7 +95,7 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
     fun getActeurSeries(id: Int) {
         viewModelScope.launch {
             try {
-                val serieact = service.acteurseries(id, api_key)
+                val serieact = repo.acteurseries(id)
                 seriesCast.value = serieact.cast
             } catch (e: Exception) {
                 e.printStackTrace()

@@ -1,16 +1,22 @@
+package com.example.my_application1.ui.Model
+
+import FakeTmdbApi
 import com.example.my_application1.ui.Api.Tmdbapi
 import com.example.my_application1.ui.Model.Repository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import jakarta.inject.Qualifier
-import jakarta.inject.Singleton
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Qualifier
+import javax.inject.Singleton
 
-@Qualifier annotation class FakeApi
-@Qualifier annotation class RealApi
+
+@Qualifier
+annotation class FakeApi
+@Qualifier
+annotation class RealApi
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -31,5 +37,5 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRepository(@FakeApi api: Tmdbapi, db: FilmDao) = Repository(api, db)
+    fun provideRepository(@FakeApi api: Tmdbapi) = Repository(api)
 }
