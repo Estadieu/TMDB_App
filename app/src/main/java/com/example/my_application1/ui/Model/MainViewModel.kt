@@ -25,7 +25,15 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
     val seriesCast = MutableStateFlow<List<CastSerie>>(emptyList())
 
     fun getMovies() {
-        viewModelScope.launch { movies.value = repo.lastMovies() }
+        viewModelScope.launch {
+            val allMovies = repo.lastMovies()
+            val favoriteFilms = repo.getFavoriteFilms().map { it.fiche.id }
+
+            // Mets à jour les films en marquant ceux qui sont favoris
+            movies.value = allMovies.map { movie ->
+                movie.copy(isFav = favoriteFilms.contains(movie.id))
+            }
+        }
     }
 
     //Pour les Films
@@ -106,19 +114,27 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
     fun addFavoriteFilm(filmEntity: FilmEntity) {
         viewModelScope.launch {
             repo.addFavoriteFilm(filmEntity)
+            // Met à jour la liste des films
+            refreshMoviesState()
         }
     }
 
     fun removeFavoriteFilm(id: String) {
         viewModelScope.launch {
             repo.removeFavoriteFilm(id)
+            // Met à jour la liste des films
+            refreshMoviesState()
         }
     }
 
-    fun getFavoriteFilms() {
-        viewModelScope.launch {
-            val favorites = repo.getFavoriteFilms()
-            // Traiter les favoris
+
+    private suspend fun refreshMoviesState() {
+        // Récupère les favoris depuis la BDD
+        val favoriteFilms = repo.getFavoriteFilms().map { it.fiche.id }
+
+        // Mets à jour l'état des films en vérifiant le statut
+        movies.value = movies.value.map { movie ->
+            movie.copy(isFav = favoriteFilms.contains(movie.id))
         }
     }
 }

@@ -6,6 +6,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -18,6 +21,7 @@ import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import androidx.window.core.layout.WindowSizeClass
 import com.example.my_application1.FilmDetailsDest
+import com.example.my_application1.ui.Model.FilmEntity
 import com.example.my_application1.ui.Model.MainViewModel
 import com.example.my_application1.ui.Model.TmdbMovie
 import com.example.my_application1.ui.theme.PurpleGrey40
@@ -30,8 +34,9 @@ fun FilmsScreen(navController: NavController, viewModel: MainViewModel, windowCl
     val movies = moviesState.value
     var searchQuery by remember { mutableStateOf("") }
 
+    // Charge les films et les favoris au démarrage
     LaunchedEffect(Unit) {
-        viewModel.searchMovies("")
+        viewModel.getMovies()
     }
 
     Column(
@@ -50,7 +55,6 @@ fun FilmsScreen(navController: NavController, viewModel: MainViewModel, windowCl
                 .padding(16.dp)
         )
 
-        //Permet de s'adapter à la taille de mon écran
         val columns = when (windowClass.windowWidthSizeClass) {
             WindowWidthSizeClass.COMPACT -> 2
             WindowWidthSizeClass.MEDIUM -> 3
@@ -67,17 +71,30 @@ fun FilmsScreen(navController: NavController, viewModel: MainViewModel, windowCl
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(movies) { movie ->
-                MovieItem(movie = movie, windowClass = windowClass) {
-                    // Permet de naviguer avec version du cours
-                    navController.navigate(FilmDetailsDest(movie.id))
-                }
+                MovieItem(
+                    movie = movie,
+                    windowClass = windowClass,
+                    onClick = {
+                        navController.navigate(FilmDetailsDest(movie.id))
+                    },
+                    onFavoriteClick = { selectedMovie ->
+                        if (selectedMovie.isFav) {
+                            viewModel.removeFavoriteFilm(selectedMovie.id.toString())
+                        } else {
+                            val entity = FilmEntity(fiche = selectedMovie, id = selectedMovie.id.toString())
+                            viewModel.addFavoriteFilm(entity)
+                        }
+                        viewModel.getMovies() // Recharge les films et les favoris après modification
+                    }
+                )
             }
         }
     }
 }
 
+
 @Composable
-fun MovieItem(movie: TmdbMovie, windowClass: WindowSizeClass, onClick: () -> Unit) {
+fun MovieItem(movie: TmdbMovie, windowClass: WindowSizeClass, onClick: () -> Unit, onFavoriteClick: (TmdbMovie) -> Unit) {
     val imageHeightFraction = when (windowClass.windowHeightSizeClass) {
         WindowHeightSizeClass.COMPACT -> 0.2f
         WindowHeightSizeClass.MEDIUM -> 0.25f
@@ -87,7 +104,8 @@ fun MovieItem(movie: TmdbMovie, windowClass: WindowSizeClass, onClick: () -> Uni
 
     val textHeightFraction = 0.1f
     val backgroundColor = PurpleGrey40
-    //Affichage de mes Card
+
+    // Card affichant les infos du film
     Card(
         modifier = Modifier
             .padding(8.dp)
@@ -103,6 +121,7 @@ fun MovieItem(movie: TmdbMovie, windowClass: WindowSizeClass, onClick: () -> Uni
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            // Image
             AsyncImage(
                 model = "https://image.tmdb.org/t/p/w400${movie.poster_path}",
                 contentDescription = movie.original_title,
@@ -110,6 +129,8 @@ fun MovieItem(movie: TmdbMovie, windowClass: WindowSizeClass, onClick: () -> Uni
                     .fillMaxWidth()
                     .fillMaxHeight(imageHeightFraction)
             )
+
+            // Titre et date de sortie
             Text(
                 text = movie.original_title,
                 fontSize = 14.sp,
@@ -126,6 +147,27 @@ fun MovieItem(movie: TmdbMovie, windowClass: WindowSizeClass, onClick: () -> Uni
                     .fillMaxWidth()
                     .fillMaxHeight(textHeightFraction)
             )
+
+            // Icône Favori
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Favori",
+                    fontSize = 12.sp,
+                    color = Color.White.copy(alpha = 0.7f)
+                )
+                IconButton(
+                    onClick = { onFavoriteClick(movie) }
+                ) {
+                    Icon(
+                        imageVector = if (movie.isFav) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = null,
+                        tint = if (movie.isFav) Color.Red else Color.White
+                    )
+                }
+            }
         }
     }
 }
