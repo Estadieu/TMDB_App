@@ -102,4 +102,23 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
             }
         }
     }
+
+    fun addFavoriteFilm(filmEntity: FilmEntity) {
+        viewModelScope.launch {
+            repo.addFavoriteFilm(filmEntity)
+        }
+    }
+
+    fun removeFavoriteFilm(id: String) {
+        viewModelScope.launch {
+            repo.removeFavoriteFilm(id)
+        }
+    }
+
+    fun getFavoriteFilms() {
+        viewModelScope.launch {
+            val favorites = repo.getFavoriteFilms()
+            // Traiter les favoris
+        }
+    }
 }

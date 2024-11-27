@@ -25,7 +25,8 @@ data class TmdbMovie(
     val title: String,
     val video: Boolean,
     val vote_average: Double,
-    val vote_count: Int
+    val vote_count: Int,
+    val isFav : Boolean = false
 )
 
 
@@ -34,7 +35,7 @@ data class Series(
     val page: Int,
     val results: List<Serie>,
     val total_pages: Int,
-    val total_results: Int
+    val total_results: Int,
 )
 
 data class Serie(
@@ -52,12 +53,11 @@ data class Serie(
     val popularity: Double = 0.0,
     val poster_path: String = "",
     val vote_average: Double = 0.0,
-    val vote_count: Int = 0
+    val vote_count: Int = 0,
+    val isFav : Boolean = false
 )
 
 //Pour afficher les acteurs
-
-
 
 data class Actors(
     val page: Int,
@@ -74,7 +74,8 @@ data class Actor(
     val name: String,
     val original_name: String,
     val popularity: Double,
-    val profile_path: String
+    val profile_path: String,
+    val isFav : Boolean = false
 )
 
 data class KnownFor(
