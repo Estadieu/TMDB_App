@@ -24,9 +24,9 @@ Ce dépôt contient plusieurs branches, chacune dédiée à des fonctionnalités
     HILT+Room
         Une branche expérimentale visant à intégrer HILT (injection de dépendances) et Room (BDD locale).
         L’objectif est de créer une application fonctionnant aussi bien en ligne qu’hors ligne.
-        Remarque : Cette branche est encore en développement et n’est pas entièrement opérationnelle.
+        Remarque : Cette branche est encore en développement et n’est pas entièrement opérationnelle. (Favori ok pour les films mais pas implémenter pour les séries et les acteurs)
         HILT->OK
-        Room->Pas encore
+        Room->OK
 
 Fonctionnalités
 
@@ -43,7 +43,7 @@ Outils et Technologies
     Jetpack Compose
     API TMDB
     HILT (Injection de dépendances - Expérimental)
-    Room (Base de données locale - Expérimental)
+    ROOM (Base de données locale - Expérimental)
 
 Améliorations Futures
 
@@ -55,3 +55,7 @@ Instructions d’utilisation
     Cloner le dépôt : https://github.com/Estadieu/TMDb_App.git
 
     Basculer vers la branche souhaitée : git checkout <nom-de-la-branche>
+
+    -> main : git checkout main
+    -> HILT + ROOM : git checkout HIT+Room
+    -> Revisions : git checkout Revision
