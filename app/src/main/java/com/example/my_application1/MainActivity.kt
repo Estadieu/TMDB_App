@@ -46,6 +46,7 @@ import androidx.navigation.toRoute
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.my_application1.ui.Film.FilmSelected
 import com.example.my_application1.ui.Home.ResponsiveHomeScreen
+import com.example.my_application1.ui.Nouv
 import com.example.my_application1.ui.serie.SeriesSelected
 import com.example.my_application1.ui.theme.My_Application1Theme
 import com.example.my_application1.ui.theme.Pink80
@@ -66,6 +67,10 @@ class ActorsScreendest
 class Profildest
 
 @Serializable
+class NouvDest
+
+
+@Serializable
 class FilmDetailsDest(val movieId: Int)
 
 @Serializable
@@ -76,7 +81,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             // Appliquer le thème
-            //Test Clone Git (Avec autres PC)
+            //Pour voir la partie HILT et Room -> voir README pour changer de branches
             My_Application1Theme {
                 val navController = rememberNavController()
                 MyApp(navController)
@@ -147,6 +152,17 @@ fun MyApp(navController: NavHostController) {
                             selectedContentColor =Pink80,
                             unselectedContentColor = Color.White
                         )
+
+                        BottomNavigationItem(
+                            icon = { Icon(Icons.Filled.AccountCircle, contentDescription = "Nouv") },
+                            label = { Text("Nouv", color = Color.White) },
+                            selected = currentDestination?.hierarchy?.any {
+                                it.hasRoute<NouvDest>()
+                            } == true,
+                            onClick = { navController.navigate(NouvDest()) },
+                            selectedContentColor =Pink80,
+                            unselectedContentColor = Color.White
+                        )
                     }
                 }
             }
@@ -160,6 +176,7 @@ fun MyApp(navController: NavHostController) {
                 composable<FilmsScreendest> { FilmsScreen(navController, modelFilm, windowSizeClass) }
                 composable<SeriesScreendest> { SeriesScreen(navController, modelSeries, windowSizeClass) }
                 composable<ActorsScreendest> { ActorsScreen(navController, modelActors, windowSizeClass) }
+                composable<NouvDest> { Nouv() }
                 composable<FilmDetailsDest> { backStackEntry ->
                     val movieDetails: FilmDetailsDest = backStackEntry.toRoute()
                     FilmSelected(navController, modelFilm, movieDetails.movieId, windowSizeClass)
@@ -217,6 +234,14 @@ fun MyApp(navController: NavHostController) {
                                 } == true,
                                 onClick = { navController.navigate(ActorsScreendest()) }
                             )
+                            NavigationRailItem(
+                                icon = { Icon(Icons.Filled.AccountBox, contentDescription = "Nouv") },
+                                label = { Text("Nouv", color = unselectedContentColor) },
+                                selected = currentDestination?.hierarchy?.any {
+                                    it.hasRoute<NouvDest>()
+                                } == true,
+                                onClick = { navController.navigate(NouvDest()) }
+                            )
                         }
                     }
 
@@ -229,6 +254,7 @@ fun MyApp(navController: NavHostController) {
                         composable<Profildest> { ResponsiveHomeScreen(navController, windowSizeClass) { navController.navigate(FilmsScreendest()) } }
                         composable<SeriesScreendest> { SeriesScreen(navController, modelSeries, windowSizeClass) }
                         composable<ActorsScreendest> { ActorsScreen(navController, modelActors, windowSizeClass) }
+                        composable<NouvDest> { Nouv() }
                         composable<FilmDetailsDest> { backStackEntry ->
                             val movieDetails: FilmDetailsDest = backStackEntry.toRoute()
                             FilmSelected(navController, modelFilm, movieDetails.movieId, windowSizeClass)

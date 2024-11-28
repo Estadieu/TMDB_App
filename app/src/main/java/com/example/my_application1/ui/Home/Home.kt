@@ -24,6 +24,7 @@ import androidx.navigation.NavController
 import androidx.window.core.layout.WindowWidthSizeClass
 import androidx.window.core.layout.WindowSizeClass
 import com.example.my_application1.FilmsScreendest
+import com.example.my_application1.NouvDest
 import com.example.my_application1.ui.theme.PurpleGrey40
 import com.example.my_application1.ui.theme.PurpleGrey80
 
@@ -47,7 +48,7 @@ fun ResponsiveHomeScreen(navController: NavController, windowClass: WindowSizeCl
                 ContactInfo()
                 Spacer(modifier = Modifier.height(20.dp))
                 ActionButton{
-                    navController.navigate(FilmsScreendest()) // Redirige vers FilmsScreen
+                    navController.navigate(NouvDest()) // Redirige vers FilmsScreen
                 }
             }
         }
