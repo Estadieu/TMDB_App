@@ -17,6 +17,10 @@ class MainViewModel : ViewModel() {
     val movies = MutableStateFlow<List<TmdbMovie>>(listOf())
     val series = MutableStateFlow<List<Serie>>(listOf())
     val actors = MutableStateFlow<List<Actor>>(listOf())
+
+    //ajout objet types playlist
+    val playlist = MutableStateFlow<Playlist?>(null)
+
     val movies_select = MutableStateFlow<DetailedMovie>(DetailedMovie())
     val series_select = MutableStateFlow<DetailedSerie>(DetailedSerie())
     val movieCast = MutableStateFlow<List<Cast>>(emptyList())
@@ -117,4 +121,17 @@ class MainViewModel : ViewModel() {
         val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
         return moshi.adapter(Playlist::class.java).fromJson(playlistjson)!!
     }
+
+    fun Playlist() {
+        viewModelScope.launch {
+            try {
+                 playlist.value = fetchPlaylist()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+
+
 }
