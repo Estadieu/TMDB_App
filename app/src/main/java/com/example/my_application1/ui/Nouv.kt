@@ -16,9 +16,15 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import coil.compose.AsyncImage
 
 
 @Composable
 fun Nouv() {
-    //tezs
+    AsyncImage(
+        model = "file:///android_assets/images/2.jpg",
+        contentDescription = "",
+
+    )
 }
