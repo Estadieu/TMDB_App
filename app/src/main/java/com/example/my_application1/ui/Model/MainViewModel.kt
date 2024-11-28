@@ -3,6 +3,9 @@ package com.example.my_application1.ui.Model
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.my_application1.ui.Api.Tmdbapi
+import com.example.myapplicationtest.playlistjson
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
@@ -108,5 +111,10 @@ class MainViewModel : ViewModel() {
                 e.printStackTrace()
             }
         }
+    }
+
+    fun fetchPlaylist() : Playlist {
+        val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+        return moshi.adapter(Playlist::class.java).fromJson(playlistjson)!!
     }
 }
